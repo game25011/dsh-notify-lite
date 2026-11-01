@@ -160,7 +160,7 @@ export function apply(ctx, config) { ... }  // 注册事件/路由/清理；无�
   8. 设置页：`settings.section` 注册（id=`dsh-notify-toast`, order=42, label thunk）；组件用 React hooks + 纯 HTML（`role="switch"` 自绘开关、`input[type=range]`、`select`、`button`），主题 token 用 `var(--dsw-alias-*, fallback)`；改动 250ms 防抖 `call('save',{patch})`；显示保存状态、通知权限、Host 连接、nativeFocus、settingsAvailable 状态；「发送测试通知」按钮 → `call('test')`（Host 无响应时本地直接展示并标注）。
   9. 权限：页面首次 `pointerdown`/`keydown` 且 `Notification.permission==='default'` 时 `Notification.requestPermission()`（一次）；测试按钮点击也可触发。
   10. 多窗口：用 `localStorage` 租约（`dsh-notify-toast:leader`，心跳 5s，15s 过期）+ `storage` 事件竞争，仅 leader 弹 toast/出声（settings 页仍各自可开）。
-  11. 任务栏角标：仅 leader 在未聚焦的 `complete` 事件上维护本窗口的未读根会话 `Set`；`taskbarBadgeEnabled` 为真时按不同 `sessionId`（合并事件用 `sessionIds`）计数，`call('taskbar-badge',{count})`；1–3 数字、>3 红点；窗口聚焦/点击任务栏、关闭设置或卸载时 `call('taskbar-badge',{count:0})`。Host helper 一次性调用 `ITaskbarList3::SetOverlayIcon`，不常驻。
+  11. 任务栏角标：仅 leader 在未聚焦的 `complete` 事件上维护本窗口的未读根会话 `Set`；`taskbarBadgeEnabled` 为真时按不同 `sessionId`（合并事件用 `sessionIds`）计数，`call('taskbar-badge',{count})`；1–3 深灰底白字蓝环数字、>3 红点；窗口聚焦/点击任务栏、关闭设置或卸载时 `call('taskbar-badge',{count:0})`。Host helper 一次性调用 `ITaskbarList3::SetOverlayIcon`，不常驻。
 - 卸载清理：所有 `ctx.effect` 返回 disposer；长轮询 Abort、AudioContext close、监听移除、任务栏角标清零。
 
 ## 4. 验收命令

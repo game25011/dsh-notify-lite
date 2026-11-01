@@ -64,21 +64,36 @@ public static class DshTaskbarBadge
             graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
             graphics.Clear(Color.Transparent);
 
-            // 1-3: a full red count disc. 4+: a smaller plain red dot so the
-            // taskbar never has to render an unreadable two-digit number.
-            int size = overflow ? 18 : 30;
+            // 1-3: a graphite count disc with a thin Fluent-style blue rim.
+            // This follows the neutral/accent direction of GitHub Primer's
+            // badge tokens and Fluent UI's filled badge, instead of the harsh
+            // saturated red block. 4+: a small red dot with a white halo, so
+            // the "more than three" state remains an unread indicator without
+            // asking Windows to render a two-digit number in 16 px.
+            int size = overflow ? 16 : 30;
             int offset = (32 - size) / 2;
-            using (var fill = new SolidBrush(Color.FromArgb(255, 208, 45, 45)))
+            Color fillColor = overflow
+                ? Color.FromArgb(255, 196, 49, 75)   // #C4314B, muted GitHub danger
+                : Color.FromArgb(245, 31, 35, 40);   // #1F2328, Primer neutral emphasis
+            using (var fill = new SolidBrush(fillColor))
             {
                 graphics.FillEllipse(fill, offset, offset, size, size);
             }
-            using (var border = new Pen(Color.FromArgb(230, 255, 255, 255), 1.4f))
-            {
-                graphics.DrawEllipse(border, offset, offset, size, size);
-            }
 
-            if (!overflow)
+            if (overflow)
             {
+                using (var halo = new Pen(Color.FromArgb(235, 255, 255, 255), 2f))
+                {
+                    graphics.DrawEllipse(halo, offset, offset, size, size);
+                }
+            }
+            else
+            {
+                // Brand-blue rim: recognizable without the urgency of red.
+                using (var rim = new Pen(Color.FromArgb(255, 47, 129, 247), 2f))
+                {
+                    graphics.DrawEllipse(rim, 1, 1, 30, 30);
+                }
                 using (var font = new Font("Segoe UI", 18f, FontStyle.Bold, GraphicsUnit.Pixel))
                 using (var textBrush = new SolidBrush(Color.White))
                 using (var format = new StringFormat())
