@@ -7,9 +7,7 @@
 ![DSH](https://img.shields.io/badge/DSH-0.2.1--rc.2-blue)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D4)
 
-> DSH 在后台时，用 **带进度条的 Windows 原生通知** 提醒你「需要回答/确认」「需要授权」「根会话每轮回复结束」。
-> DSH 窗口聚焦时完全不打扰；点击通知回到 DSH，能定位会话就定位。
-> 不访问外部网络；仅使用本机 loopback 激活回调；不采集、不调用云端模型、不增加 token。
+> dsh-notify-toast 是一款适用于 Windows 10/11 的非官方 DSH 插件（MIT 协议）。它提供聚焦不打扰的后台提醒，通过 Windows 原生通知提示提问、授权与根会话完成；任务栏未读角标按不同根会话计数，同一会话多次完成算一个，1–3 显示数字，超过 3 显示红点。主要代码由 AI 编程助手生成，人类维护者负责需求、调试、测试与发布。
 
 - 源码/本地包名：`dsh-notify-toast` · 版本：`0.4.0` · 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-toast
 - npm 状态：**尚未发布**；不要执行 `npm install dsh-notify-toast`（该名称在 npm 上属于另一个项目）
