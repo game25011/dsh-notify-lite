@@ -11,11 +11,11 @@
 > DSH 窗口聚焦时完全不打扰；点击通知回到 DSH，能定位会话就定位。
 > 不访问外部网络；仅使用本机 loopback 激活回调；不采集、不调用云端模型、不增加 token。
 
-- 源码/本地包名：`dsh-notify-toast` · 版本：`0.3.0` · 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-toast
+- 源码/本地包名：`dsh-notify-toast` · 版本：`0.4.0` · 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-toast
 - npm 状态：**尚未发布**；不要执行 `npm install dsh-notify-toast`（该名称在 npm 上属于另一个项目）
 - 适用：DeepSeek Harness Desktop `0.2.1-rc.2`（Electron 壳，profile `desktop`），Windows 10/11
 - 形态：DSH 官方 bundle（Host + Web Client 两半），通过官方插件管理器安装/卸载
-- 状态：0.3.0 原生进度 toast、bar-only 样式、自动收回、点击回会话与 Goal 汇总已在本机简单实测（2026-10-21）；Goal 边界场景仍待补测；「全部完成后改写标题」为可选功能（默认关）
+- 状态：0.4.0 新增任务栏未读角标（方案 B：不同根会话计数）；0.3.0 原生进度 toast、bar-only 样式、自动收回、点击回会话与 Goal 汇总已在本机简单实测；Goal 边界场景仍待补测；「全部完成后改写标题」为可选功能（默认关）
 - 截图：![Windows 原生进度通知](docs/assets/native-toast.png)
 
 ## AI 参与说明
@@ -35,6 +35,7 @@
 | 本轮回复结束 | `session/event` 的 `turn/end(completed)` 触发；仅根会话，子代理默认不触发；单步标题「DeepSeek 搞定了一小步」，2–4 步「DeepSeek 一口气推进了 N 步」，5 步及以上「DeepSeek 火力全开，连推了 N 步」；正文取最后一条助手回复首段有效文字，取不到写「点击查看」 |
 | 目标模式汇总 | goal `active + armed` 期间不逐轮提醒；在 `complete` / `paused` / `blocked` / Round 上限 / `disarmed` 后按 `roundsStarted` 增量只发一条；暂停/受阻使用中性标题；提问/授权仍即时 |
 | 只在未聚焦时提醒 | 事件到达时实时判断 `document.hasFocus()` / `visibilityState`；聚焦时不弹、不响 |
+| 任务栏未读角标 | DSH 在后台时，在 DSH 任务栏图标上显示有完成结果的**不同根会话数**（方案 B）；同一会话完成多次只计 1 个。1–3 显示数字，超过 3 个显示红点；回到 DSH 后自动清除；设置页可关闭 |
 | Windows 原生进度 toast | Host 通过 PowerShell/C#/WinRT 创建 Windows 系统通知；通知内含动态 `<progress>` 进度条；到达近似时间后停止更新，短暂缓冲后收回横幅；通知中心保留由 ExpirationTime 约束，不写自绘窗口 |
 | 兼容降级 | 原生 helper 不可用或启动失败时自动退回 Web Notification；两条路径都 `silent`，声音由插件统一播放一次 |
 | 正文长度 | 默认 40 字（Unicode 码点），可配 20–60；超出截断加「…」 |
@@ -43,13 +44,13 @@
 | 点击回窗 | 先由 Host 用 Windows `SetForegroundWindow` 把 DSH 窗口置前，再尽力打开对应会话；koffi 不可用时降级 `window.focus()` |
 | 合并 | 默认 2.5 s 内的多个「完成」合并为一条，避免连环弹 |
 | 全部完成后改写标题 | 可选（默认关）：多个会话同时运行时，等全部会话都成功结束，把最后结束的会话标题改为指定文案；只有一个会话运行时不生效 |
-| 设置页 | DSH 设置 →「通知」：启用/提问/授权/本轮回复/目标模式结束后汇总开关、通知显示方式（原生进度/兼容）、自动移除时间、正文长度、隐私模式、提示音（可试听）、音量、合并间隔、测试通知/测试系统通知、状态诊断 |
+| 设置页 | DSH 设置 →「通知」：启用/提问/授权/本轮回复/任务栏未读角标/目标模式结束后汇总开关、通知显示方式（原生进度/兼容）、自动移除时间、正文长度、隐私模式、提示音（可试听）、音量、合并间隔、测试通知/测试系统通知、状态诊断 |
 | 持久化 | 官方 `ctx.settings`（插件 Config 的 volatile 字段 → profile patch），重启 DSH 后保留；不写自建配置文件 |
 | 降级 | 通知权限拒绝 / 环境不支持 / Host 不可用 / `settings` 缺失 / koffi 加载失败：不崩溃，设置页显示状态 |
 
 ### 明确不做
 
-任务栏红点/角标/数字、会话计数、常驻托盘/后台服务；原生 toast 的 PowerShell/C# helper 只随通知生命周期短暂运行。不访问外部网络、不修改 DSH 核心、不遥测、不调用模型。
+常驻托盘/后台服务、任务栏进度条/闪烁动画；任务栏角标只在通知 helper 的一次性调用中更新，不增加常驻进程。不访问外部网络、不修改 DSH 核心、不遥测、不调用模型。
 
 ---
 
@@ -63,7 +64,7 @@
 
 ### 方式 A：应用内插件管理器（推荐）
 
-1. 把交付的 `dsh-notify-toast-0.3.0.tgz` 放到本机任意目录（路径不要含空格）。
+1. 把交付的 `dsh-notify-toast-0.4.0.tgz` 放到本机任意目录（路径不要含空格）。
 2. 在 DSH 里让 Agent 用官方插件管理器安装，或使用插件管理界面：
    - Agent 工具：`plugin_manager` → `action: install_bundle`，`target: <tgz 绝对路径>`
    - 命令行：**仅适用于自管 profile（web/headless）**；官方 Desktop 的 desktop profile 由 Electron 应用的插件管理器管理，请用上面的界面或 Agent 方式。
@@ -114,6 +115,7 @@ https://raw.githubusercontent.com/game25011/dsh-notify-toast/d8f96cbc64ebe9572a4
 | 提问与方案确认 | 开/关 | 开 | `user-questions/request` |
 | 授权（审批） | 开/关 | 开 | `approval/request` |
 | 本轮回复结束 | 开/关 | 开 | 子代理完成始终不提醒；只表示这一轮回复结束，不代表整个任务完成 |
+| 任务栏未读角标 | 开/关 | 开 | DSH 后台时显示有完成结果的不同根会话数；同一会话多次完成只计 1；1–3 显示数字，超过 3 显示红点；聚焦/点击任务栏后清除；仅 Windows |
 | 目标模式结束后汇总 | 开/关 | 开 | goal 自动推进期间不逐轮提醒；结束/暂停/受阻/Round 上限后按 Goal Round 增量汇总为一条；提问/授权仍即时 |
 | 正文长度 | 20–60 字 | 40 | 按 Unicode 码点截断，超出加「…」 |
 | 隐私模式（只显示标题） | 开/关 | 关 | 正文留空 |

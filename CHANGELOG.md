@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 — 2026-11-01
+
+- 新增 Windows 任务栏未读角标：DSH 在后台且有完成结果时，在 DSH 任务栏图标上显示未读根会话数；设置页可关闭。
+- 计数采用方案 B：不同根会话各算 1 个，同一会话完成多次只算 1 个；合并完成事件携带 `sessionIds`，避免多会话被合并后少计。
+- 角标显示上限为 3：1–3 显示数字，超过 3 显示红色圆点；回到 DSH（窗口聚焦/点击任务栏）后清除。
+- Host 新增 `taskbar-badge` RPC 与一次性 PowerShell/C# helper（`ITaskbarList3::SetOverlayIcon`）；不增加常驻后台进程，不联网。
+- 配置新增 `taskbarBadgeEnabled`（默认开启）；测试补充 badge 计数/聚焦清除，合并测试覆盖 `sessionIds`。
+
 ## 0.3.0 — 2026-10-20
 
 - 原生进度条底部只保留一条 bar + 单个静态「自动关闭」说明，不再显示百分比、剩余秒数或重复标签；声音改为 native helper 提交成功后再播放，改善弹窗与提示音同步；移除 toast 的 `dsh://open` 协议启动，避免点击通知另起 DSH 实例。

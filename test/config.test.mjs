@@ -32,7 +32,7 @@ import {
 
 test('constants match docs/INTERFACE.md §0', () => {
   assert.equal(PKG_ID, 'dsh-notify-toast')
-  assert.equal(VERSION, '0.3.0')
+  assert.equal(VERSION, '0.4.0')
   assert.equal(RPC_CHANNEL, '/dsh-notify-toast')
   assert.equal(SETTINGS_NS, 'dsh-notify-toast')
   assert.equal(LOCALE_NS, 'dsh-notify-toast')
@@ -44,6 +44,7 @@ test('DEFAULTS match docs/INTERFACE.md §2.4', () => {
     questionEnabled: true,
     approvalEnabled: true,
     completionEnabled: true,
+    taskbarBadgeEnabled: true,
     titleOnly: false,
     bodyLength: 40,
     sound: 'ding',

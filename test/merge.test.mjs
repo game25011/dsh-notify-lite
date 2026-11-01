@@ -99,6 +99,7 @@ test('two completions inside the window merge into one count=2 event', () => {
   assert.equal(published[0].count, 2)
   assert.equal(published[0].text, 'Second answer.', 'latest text wins')
   assert.equal(published[0].sessionId, 's2')
+  assert.deepEqual(published[0].sessionIds, ['s1', 's2'])
   assert.equal(published[0].sessionTitle, 'Second task')
 })
 

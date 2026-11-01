@@ -389,6 +389,7 @@ function createFakeContext(env, options = {}) {
         questionEnabled: true,
         approvalEnabled: true,
         completionEnabled: true,
+        taskbarBadgeEnabled: true,
         titleOnly: false,
         bodyLength: 40,
         sound: 'chime',
@@ -429,7 +430,7 @@ function createFakeContext(env, options = {}) {
     if (endpoint === 'config') {
       return Promise.resolve({
         ok: true,
-        value: { ok: true, version: '0.3.0', ns: NS, config: Object.assign({}, api.hostConfig), status: statusValue() },
+        value: { ok: true, version: '0.4.0', ns: NS, config: Object.assign({}, api.hostConfig), status: statusValue() },
       })
     }
     if (endpoint === 'save') {
@@ -448,6 +449,9 @@ function createFakeContext(env, options = {}) {
     }
     if (endpoint === 'focus') {
       return Promise.resolve({ ok: true, value: { ok: true, native: true } })
+    }
+    if (endpoint === 'taskbar-badge') {
+      return Promise.resolve({ ok: true, value: { ok: true, count: payload && payload.count } })
     }
     if (endpoint === 'native-notify') {
       if (options.nativeNotifyFailure === true) {
@@ -927,7 +931,7 @@ async function main() {
       '在线页面',
       '已允许',
       '已连接',
-      '0.3.0',
+      '0.4.0',
     ]) {
       assert.ok(text.includes(fragment), 'settings page missing copy: ' + fragment)
     }
@@ -1014,6 +1018,30 @@ async function main() {
     assert.equal(call.payload.durationMs, 5000)
     assert.equal(cardEnv.state.notifications.length, 0, 'no Web fallback when the Host accepts the native toast')
     await disposeFakeContext(card.api)
+  })
+
+  await run('taskbar badge counts distinct sessions and clears on focus', async () => {
+    const badgeEnv = createEnvironment({ permission: 'granted', focused: false })
+    const badgePlugin = badgeEnv.state.definitions[0].factory(fakeRequire)
+    const badge = createFakeContext(badgeEnv, {
+      config: { notificationMode: 'native', taskbarBadgeEnabled: true },
+    })
+    badgePlugin.apply(badge.ctx)
+    await settle()
+    await deliverEvents(badge.api, [
+      { id: 101, kind: 'complete', at: Date.now(), sessionId: 'session-a', text: 'a' },
+      { id: 102, kind: 'complete', at: Date.now(), sessionId: 'session-a', text: 'b' },
+      { id: 103, kind: 'complete', at: Date.now(), sessionId: 'session-b', text: 'c' },
+    ])
+    const badgeCalls = badge.api.rpcCalls.filter((call) => call.endpoint === 'taskbar-badge')
+    assert.ok(badgeCalls.length >= 1, 'taskbar badge RPC was sent')
+    assert.equal(badgeCalls[badgeCalls.length - 1].payload.count, 2, 'two distinct sessions count twice')
+    badgeEnv.state.focused = true
+    badgeEnv.dispatchWindow('focus', {})
+    await settle()
+    const afterFocus = badge.api.rpcCalls.filter((call) => call.endpoint === 'taskbar-badge')
+    assert.equal(afterFocus[afterFocus.length - 1].payload.count, 0, 'focus clears the badge')
+    await disposeFakeContext(badge.api)
   })
 
   await run('activation event opens the target session even when focused', async () => {
