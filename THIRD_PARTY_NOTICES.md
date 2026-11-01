@@ -11,3 +11,12 @@
 - Code license of uisfx: MIT. This plugin vendors only the audio asset, not the uisfx runtime.
 
 Source package was audited from `uisfx-0.4.0.tgz`; see the upstream repository for the complete license texts and sound-pack manifest.
+
+## Community design/API references
+
+This plugin was informed by the following MIT-licensed community plugins
+(ideas and API usage patterns only; all code here is original):
+
+- https://github.com/chromoany/dsh-notify-me
+- https://github.com/BillCx330/dsh-plugin-notify-sounds
+- https://github.com/Laplace-bit/dsh-bell-notify

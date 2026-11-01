@@ -20,10 +20,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
----
-
-This plugin was informed by the following MIT-licensed community plugins
-(ideas and API usage patterns only; all code here is original):
-- https://github.com/chromoany/dsh-notify-me
-- https://github.com/BillCx330/dsh-plugin-notify-sounds
-- https://github.com/Laplace-bit/dsh-bell-notify
