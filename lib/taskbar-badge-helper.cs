@@ -94,17 +94,25 @@ public static class DshTaskbarBadge
                 {
                     graphics.DrawEllipse(rim, 1, 1, 30, 30);
                 }
-                // Segoe UI Black + a 20 px glyph + typographic centering: the
-                // default GDI+ StringFormat adds padding, which made the numeral
-                // look thin and small when the 32 px source is scaled to 16 px.
+                // Segoe UI Black + a 20 px glyph. Center the actual glyph path,
+                // not DrawString's padded layout box: this keeps "1", "2" and
+                // "3" optically centered and maximises their footprint in the
+                // 30 px disc after Windows scales it to the 16 px overlay.
                 using (var font = new Font("Segoe UI Black", 20f, FontStyle.Regular, GraphicsUnit.Pixel))
                 using (var textBrush = new SolidBrush(Color.White))
                 using (var format = new StringFormat(StringFormat.GenericTypographic))
+                using (var path = new GraphicsPath())
                 {
-                    format.Alignment = StringAlignment.Center;
-                    format.LineAlignment = StringAlignment.Center;
-                    format.FormatFlags |= StringFormatFlags.NoClip;
-                    graphics.DrawString(shown.ToString(), font, textBrush, new RectangleF(0, -1, 32, 32), format);
+                    path.AddString(shown.ToString(), font.FontFamily, (int)font.Style, font.Size, PointF.Empty, format);
+                    RectangleF bounds = path.GetBounds();
+                    float dx = (32f - bounds.Width) / 2f - bounds.X;
+                    float dy = (32f - bounds.Height) / 2f - bounds.Y;
+                    using (var matrix = new Matrix())
+                    {
+                        matrix.Translate(dx, dy);
+                        path.Transform(matrix);
+                    }
+                    graphics.FillPath(textBrush, path);
                 }
             }
 
