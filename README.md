@@ -222,7 +222,7 @@ Host: koffi user32 SetForegroundWindow ← focus
 ```text
 命令                          说明
 npm test                      文本清洗/截断、配置、合并、goal 汇总与原生生命周期的单元测试（94 项）
-npm run smoke                 模拟 __ModuleLoader__ 加载 client.js 的冒烟测试（25 项）
+npm run smoke                 模拟 __ModuleLoader__ 加载 client.js 的冒烟测试（26 项）
 npm run probe                 RPC 探针：--self-check 纯函数校验；--url 探测宿主 RPC 路由（无 cookie 预期 401/403）
 node scripts/host-probe.mjs <profileDir>   Host 集成探针（真实 profile cwd）
 npm pack                      生成交付用 tgz

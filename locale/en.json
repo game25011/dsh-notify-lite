@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Toast Notifications",
-    "description": "Windows native toasts for questions, approvals, and root-session completion while DeepSeek Harness is in the background. Silent while focused; click a toast to return."
+    "description": "Windows native toasts for questions, approvals, and root-session completion while DeepSeek Harness is in the background, plus a taskbar unread badge for distinct root sessions. Silent while focused; click a toast to return."
   },
   "nav": "Notifications",
   "notifyQuestionTitle": "DeepSeek has a question for you",
