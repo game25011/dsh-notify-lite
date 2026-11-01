@@ -94,13 +94,17 @@ public static class DshTaskbarBadge
                 {
                     graphics.DrawEllipse(rim, 1, 1, 30, 30);
                 }
-                using (var font = new Font("Segoe UI", 18f, FontStyle.Bold, GraphicsUnit.Pixel))
+                // Segoe UI Black + a 20 px glyph + typographic centering: the
+                // default GDI+ StringFormat adds padding, which made the numeral
+                // look thin and small when the 32 px source is scaled to 16 px.
+                using (var font = new Font("Segoe UI Black", 20f, FontStyle.Regular, GraphicsUnit.Pixel))
                 using (var textBrush = new SolidBrush(Color.White))
-                using (var format = new StringFormat())
+                using (var format = new StringFormat(StringFormat.GenericTypographic))
                 {
                     format.Alignment = StringAlignment.Center;
                     format.LineAlignment = StringAlignment.Center;
-                    graphics.DrawString(shown.ToString(), font, textBrush, new RectangleF(0, 0, 32, 32), format);
+                    format.FormatFlags |= StringFormatFlags.NoClip;
+                    graphics.DrawString(shown.ToString(), font, textBrush, new RectangleF(0, -1, 32, 32), format);
                 }
             }
 
