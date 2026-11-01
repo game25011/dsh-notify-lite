@@ -5,7 +5,7 @@
 - 新增 Windows 任务栏未读角标：DSH 在后台且有完成结果时，在 DSH 任务栏图标上显示未读根会话数；设置页可关闭。
 - 计数采用方案 B：不同根会话各算 1 个，同一会话完成多次只算 1 个；合并完成事件携带 `sessionIds`，避免多会话被合并后少计。
 - 角标显示上限为 3：1–3 显示深灰底、白字、蓝色细环的数字角标，超过 3 显示红色圆点；数字使用 Segoe UI Black 20，并按实际字形路径几何居中（GraphicsPath），增大占幅；回到 DSH（窗口聚焦/点击任务栏）后清除。
-- Host 新增 `taskbar-badge` RPC 与一次性 PowerShell/C# helper（`ITaskbarList3::SetOverlayIcon`）；不增加常驻后台进程，不联网。
+- Host 新增 `taskbar-badge` RPC 与任务栏 helper（`ITaskbarList3::SetOverlayIcon`）；优先使用首次编译缓存的小型独立 C# EXE（实测热路径约 55–85 ms、约 14 MB 瞬时内存），PowerShell 保留为回退；不增加常驻后台进程，不联网。任务栏 helper 缓存只保留最近 8 个。
 - 配置新增 `taskbarBadgeEnabled`（默认开启）；测试补充 badge 计数/聚焦清除，合并测试覆盖 `sessionIds`。
 
 ## 0.3.0 — 2026-10-20

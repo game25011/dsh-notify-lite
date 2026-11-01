@@ -30,7 +30,7 @@ LOCALE_NS = 'dsh-notify-toast'      // 客户端 locale 命名空间
 
 | 文件 | 负责人 | 说明 |
 |---|---|---|
-| `lib/index.js`, `lib/text.js`, `lib/config.js`, `lib/native-focus.js` | host-dev | Host 半 |
+| `lib/index.js`, `lib/text.js`, `lib/config.js`, `lib/native-focus.js`, `lib/native-toast.js`, `lib/taskbar-badge.js` | host-dev | Host 半 |
 | `lib/client.js` | client-dev | Client 半（单文件，CJS 包装，无 import） |
 | `test/config.test.mjs`, `test/merge.test.mjs`, `test/text.test.mjs`, `test/rpc-route.test.mjs`, `test/goal-summary.test.mjs` | host-dev/lead | 单元/路由/goal 状态机探针 |
 | `scripts/client-smoke.mjs` | client-dev | 用 Node 模拟 `window/__ModuleLoader__` 做加载冒烟 |

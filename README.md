@@ -20,7 +20,7 @@
 
 ## AI 参与说明
 
-本项目大部分代码由 AI 编程助手生成，部分测试与文档也有 AI 辅助；人类维护者负责需求、调试、测试、发布和维护。AI 生成内容可能存在错误，欢迎提交 issue 或 pull request。本项目采用 MIT License，AI 工具不是作者、版权持有者或责任主体，本说明不构成法律意见。详见 [AI-DISCLOSURE.md](AI-DISCLOSURE.md)。
+本项目的主要代码（Host、Web Client、PowerShell/C# 原生 helper 及多数测试/文档）由 AI 编程助手生成；人类维护者负责需求、调试、测试、发布和维护。AI 生成内容可能存在错误，欢迎提交 issue 或 pull request。本项目采用 MIT License，AI 工具不是作者、版权持有者或责任主体，本说明不构成法律意见。详见 [AI-DISCLOSURE.md](AI-DISCLOSURE.md)。
 
 > 命名说明：中文显示名仅用于界面展示；npm 包名、目录、Host 行 id、settings 命名空间与 RPC 前缀保留 ASCII `dsh-notify-toast`；插件清单公共 id 为 `dsh.notify-toast`。
 
@@ -50,7 +50,7 @@
 
 ### 明确不做
 
-常驻托盘/后台服务、任务栏进度条/闪烁动画；任务栏角标只在通知 helper 的一次性调用中更新，不增加常驻进程。不访问外部网络、不修改 DSH 核心、不遥测、不调用模型。
+常驻托盘/后台服务、任务栏进度条/闪烁动画；任务栏角标只在任务栏 helper 的一次性调用中更新，不增加常驻进程。不访问外部网络、不修改 DSH 核心、不遥测、不调用模型。
 
 ---
 
@@ -138,11 +138,12 @@ Host (lib/index.js)                                  Client (lib/client.js)
 ─────────────────────────────────────────────        ─────────────────────────────────────
 approval/request ───────────┐                        settings.section 设置页（React，纯 HTML）
 user-questions/request ─────┼─ 清洗/截断/合并 ──┐    ├─ 焦点判断（hasFocus + visibilityState）
-session/event turn/end ─────┘                    │    ├─ Web Notification(silent:true) + 点击回窗
+session/event turn/end ─────┘                    │    ├─ native toast RPC / Web Notification 回退 + 点击回窗
                                                  ▼    ├─ Web Audio 合成提示音 + 内嵌 CC0「弹一下」音效
                                  事件环形缓冲 + 长轮询 ┘
 Host 浏览器路由 /dsh-notify-toast（官方 RPC 信封 + 同源栅栏）
-  config / save / poll / health / test / focus
+  config / save / poll / health / test / focus / taskbar-badge
+Host: native-toast.ps1 → WinRT Toast；taskbar-badge EXE → ITaskbarList3
 Host: ctx.settings（volatile Config）← save
 Host: koffi user32 SetForegroundWindow ← focus
 ```
@@ -161,6 +162,15 @@ Host: koffi user32 SetForegroundWindow ← focus
 - **点击回窗**：客户端 `POST`（RPC）`focus` → Host 用 DSH 自带 koffi（`resources/app.asar.unpacked/.../koffi.node`）调用 user32 `ShowWindow/SetForegroundWindow/AttachThreadInput` 把 Electron 主窗口置前；随后客户端 `window.focus()` 并打开对应会话。
 - **配置持久化**：`Config` 全字段 `.volatile()`；Host 从 profile 解析 `@deepseek-ai/schemastery`（优先 `DSH_PROFILE_DIR`，其次 Host 进程 cwd 即 profile 目录，再次 DSH 安装包内副本），
   通过 `ctx.settings.describe()/update()` 读写当前 profile patch。设置页「设置持久化 / configSource」可见状态。
+
+### 实现与资源占用
+
+- **Host** 在 DSH 进程内运行，只监听事件、维护 200 条内存环形缓冲、长轮询和 settings；空闲时没有额外常驻进程。
+- **客户端** 是约 159 KB 的 Web bundle；空闲时只有一条 25 秒长轮询和 5 秒一次的 localStorage leader 心跳。
+- **Windows toast** 由一次性 PowerShell/C# helper 调 WinRT 创建；一个 toast 对应一个 helper，toast 结束后退出，同时最多 8 个。
+- **任务栏角标** 优先使用首次编译并缓存的小型独立 C# EXE，直接调用 \`ITaskbarList3::SetOverlayIcon\`；热路径实测约 55–85 ms、约 14 MB 瞬时内存。首次使用需要编译，之后命中缓存；编译或 EXE 不可用时回退 PowerShell helper。
+- **缓存** 位于 \`%LOCALAPPDATA%\\dsh-notify-toast\\native-cache\`；任务栏 helper 缓存只保留最近 8 个，避免旧 hash 文件无限积累。
+- 不访问外部网络、不调用模型、不采集；点击回调只使用本机 loopback。
 
 ### 隐私
 
