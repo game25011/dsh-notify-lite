@@ -1,5 +1,7 @@
 # 桌面通知（Windows 原生 toast）
 
+**轻量 · 原生 · 不打扰**
+
 中文 | [English](./README.en.md)
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)

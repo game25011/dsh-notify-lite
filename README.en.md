@@ -1,5 +1,7 @@
 # Desktop Notifications (Windows Native Toast)
 
+**Lightweight · Native · Quiet**
+
 English | [中文](./README.md)
 
 [![CI](https://github.com/game25011/dsh-notify-toast/actions/workflows/ci.yml/badge.svg)](https://github.com/game25011/dsh-notify-toast/actions/workflows/ci.yml) ![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg) ![DSH](https://img.shields.io/badge/DSH-0.2.1--rc.2-blue) ![Platform: Windows 10/11](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D4)

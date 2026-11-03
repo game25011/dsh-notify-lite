@@ -1,6 +1,6 @@
 {
   "id": "dsh.notify-toast",
-  "name": "桌面通知（Windows 原生 toast）",
+  "name": "轻量原生通知（Windows）",
   "version": "0.4.0",
   "manifestVersion": "0.15",
   "facets": {

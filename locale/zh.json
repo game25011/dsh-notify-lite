@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "右下角通知",
-    "description": "DSH 在后台时用 Windows 原生通知提醒提问、授权与根会话任务完成，并在任务栏显示未读根会话角标；窗口聚焦时完全不打扰，点击通知回到 DSH。"
+    "title": "轻量原生通知",
+    "description": "DSH 在后台时的轻量 Windows 原生通知：提醒提问、授权与根会话完成，并在任务栏显示未读根会话角标；聚焦时不打扰，不常驻后台。"
   },
   "nav": "通知",
   "notifyQuestionTitle": "DeepSeek 想问你一个问题",
