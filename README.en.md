@@ -1,6 +1,6 @@
 # Desktop Notifications (Windows Native Toast)
 
-**Lightweight · Native · Quiet**
+**Lightweight · Native · Extensible · Quiet**
 
 English | [中文](./README.md)
 
@@ -16,6 +16,19 @@ English | [中文](./README.md)
 - Status: 0.4.1 fixes missed approval notifications. 0.4.0 adds a taskbar unread badge (scheme B: distinct root sessions); 0.3.0 native progress toast, automatic banner retraction, click-to-session, bar-only styling and a simple goal aggregation run were verified on a real device; goal edge cases remain to be re-tested; optional "rewrite the title when all tasks are done" remains available (default off)
 
 ![Windows native progress toast](docs/assets/native-toast.png)
+
+## 0.4.1 update
+
+Fixes missed approval notifications: DSH's `approval/request` is a waterfall and the UI approval answerer may claim and short-circuit it. The plugin observer now uses `prepend + global`, publishes the notification, and always delegates with `next()`; it never changes the approval outcome.
+
+## Maintenance direction
+
+The goal is a **lightweight, native, extensible and quiet** Windows notification layer, maintained for the long term.
+
+- **Lightweight**: no resident tray or background service; helpers start only when needed.
+- **Native**: uses Windows native toast and taskbar overlay APIs.
+- **Extensible**: MIT-licensed, with separated Host/Client/native helper layers and an open `docs/INTERFACE.md`. Users can tune settings, fork the project, or add notification kinds, sounds and routes through the interfaces. There is no in-app scripting or third-party runtime extension API yet; deep customization requires code changes.
+- **Continuously maintained**: compatibility, installation reliability and real feedback come first; no feature-count race.
 
 ## AI-assisted development
 
