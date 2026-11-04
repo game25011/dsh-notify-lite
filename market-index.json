@@ -45,12 +45,12 @@
     {
       "name": "dsh-notify-toast",
       "title": {
-        "en": "Windows Native Notifications",
-        "zh": "Windows 原生通知"
+        "en": "Lightweight Native Notifications",
+        "zh": "轻量原生通知"
       },
       "description": {
-        "en": "Windows native toast notifications and a taskbar unread badge for DeepSeek Harness; progress bar, goal-mode summaries, and click-to-session.",
-        "zh": "带进度条、Goal 汇总、点击回会话和任务栏未读角标的 Windows 原生通知插件。"
+        "en": "Lightweight native Windows notifications for DSH: background alerts for questions, approvals and root-session completion, plus a taskbar unread badge. No resident service; silent while focused.",
+        "zh": "DSH 在后台时的轻量 Windows 原生通知：提问、授权与根会话完成提醒，任务栏未读角标；不常驻、聚焦不打扰。"
       },
       "icon": "icon.svg",
       "author": "game25011 <1449262586@QQ.com>",
@@ -74,17 +74,17 @@
           "native"
         ],
         "sortKeys": {
-          "published": 1793524723
+          "published": 1793801174
         }
       },
       "versions": [
         {
-          "version": "0.4.0",
-          "publishTimestamp": 1793524723,
+          "version": "0.4.1",
+          "publishTimestamp": 1793801174,
           "source": {
             "type": "git",
             "url": "https://github.com/game25011/dsh-notify-toast",
-            "commit": "9dde541d2b660f92ebebf72166d0b203ac0fea39"
+            "commit": "ad4d19a0f814ffef179a73e86341de019477e806"
           },
           "engines": {
             "dsh": ">=0.2.1-rc.2 <0.3.0"
