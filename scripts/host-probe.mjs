@@ -42,7 +42,7 @@ console.log('Config:', Config ? 'resolved' : 'unresolved', '| source:', __test.r
 assert.ok(Config, 'Config schema should resolve from the profile cwd')
 assert.notEqual(__test.resolvedConfigSource, 'unresolved')
 
-const calls = { effects: [], registeredRoutes: [], updates: [], configures: 0 }
+const calls = { effects: [], registeredRoutes: [], updates: [], configures: 0, eventListeners: [] }
 
 function makeCtx(services, parent) {
   const ctx = {
@@ -50,7 +50,8 @@ function makeCtx(services, parent) {
     get(name) {
       return services[name]
     },
-    on() {
+    on(eventName, listener, options) {
+      calls.eventListeners.push({ eventName, listener, options })
       return () => {}
     },
     effect(fn) {
@@ -139,6 +140,22 @@ const route = calls.registeredRoutes[0]
 assert.equal(route.kind, 'prefix')
 assert.equal(route.path, '/dsh-notify-toast')
 assert.equal(calls.configures, 1, 'automatic settings form is disabled')
+
+const approvalRegistration = calls.eventListeners.find((entry) => entry.eventName === 'approval/request')
+assert.ok(approvalRegistration, 'approval/request listener is registered')
+assert.equal(approvalRegistration.options && approvalRegistration.options.prepend, true, 'approval observer is prepended before the UI answerer')
+assert.equal(approvalRegistration.options && approvalRegistration.options.global, true, 'approval observer receives scoped requests')
+let approvalDelegated = false
+const approvalOutcome = await approvalRegistration.listener(
+  { agent: { id: 'session-approval' }, toolName: 'Bash', reason: 'approval probe' },
+  async () => {
+    approvalDelegated = true
+    return 'allowed-once'
+  },
+)
+assert.equal(approvalOutcome, 'allowed-once')
+assert.equal(approvalDelegated, true, 'approval observer always delegates')
+console.log('approval observer: prepend/global + delegate ✓')
 
 function request(body, { method = 'POST', url = '/dsh-notify-toast/health', headers = {} } = {}) {
   const req = Readable.from([Buffer.from(typeof body === 'string' ? body : JSON.stringify(body))])
