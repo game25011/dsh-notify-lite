@@ -11,11 +11,11 @@
 
 > dsh-notify-toast 是一款适用于 Windows 10/11 的非官方 DSH 插件（MIT 协议）。它提供聚焦不打扰的后台提醒，通过 Windows 原生通知提示提问、授权与根会话完成；任务栏未读角标按不同根会话计数，同一会话多次完成算一个，1–3 显示数字，超过 3 显示红点。主要代码由 AI 编程助手生成，人类维护者负责需求、调试、测试与发布。
 
-- 源码/本地包名：`dsh-notify-toast` · 版本：`0.4.0` · 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-toast
+- 源码/本地包名：`dsh-notify-toast` · 版本：`0.4.1` · 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-toast
 - npm 状态：**尚未发布**；不要执行 `npm install dsh-notify-toast`（该名称在 npm 上属于另一个项目）
 - 适用：DeepSeek Harness Desktop `0.2.1-rc.2`（Electron 壳，profile `desktop`），Windows 10/11
 - 形态：DSH 官方 bundle（Host + Web Client 两半），通过官方插件管理器安装/卸载
-- 状态：0.4.0 新增任务栏未读角标（方案 B：不同根会话计数）；0.3.0 原生进度 toast、bar-only 样式、自动收回、点击回会话与 Goal 汇总已在本机简单实测；Goal 边界场景仍待补测；「全部完成后改写标题」为可选功能（默认关）
+- 状态：0.4.1 修复审批通知漏发；0.4.0 新增任务栏未读角标（方案 B：不同根会话计数）；0.3.0 原生进度 toast、bar-only 样式、自动收回、点击回会话与 Goal 汇总已在本机简单实测；Goal 边界场景仍待补测；「全部完成后改写标题」为可选功能（默认关）
 - 截图：![Windows 原生进度通知](docs/assets/native-toast.png)
 
 ## AI 参与说明
@@ -64,7 +64,7 @@
 
 ### 方式 A：应用内插件管理器（推荐）
 
-1. 把交付的 `dsh-notify-toast-0.4.0.tgz` 放到本机任意目录（路径不要含空格）。
+1. 把交付的 `dsh-notify-toast-0.4.1.tgz` 放到本机任意目录（路径不要含空格）。
 2. 在 DSH 里让 Agent 用官方插件管理器安装，或使用插件管理界面：
    - Agent 工具：`plugin_manager` → `action: install_bundle`，`target: <tgz 绝对路径>`
    - 命令行：**仅适用于自管 profile（web/headless）**；官方 Desktop 的 desktop profile 由 Electron 应用的插件管理器管理，请用上面的界面或 Agent 方式。
