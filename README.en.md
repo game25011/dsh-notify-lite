@@ -1,4 +1,4 @@
-# Desktop Notifications (Windows Native Toast)
+# Lightweight Native Notifications (Windows)
 
 **Lightweight · Native · Extensible · Quiet**
 
