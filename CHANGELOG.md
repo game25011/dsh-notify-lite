@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.2 — 2026-11-07
+
+- 元数据与兼容声明补丁：支持 DSH Desktop 0.2.2-rc.1，`engines.dsh` 显式覆盖 `0.2.2-rc.x` 范围，更新 README 徽标。
+- 未修改通知核心逻辑；94 项单测、26 项 client smoke、Host integration probe 通过；设置页图标待实际界面确认。
+
 ## 0.4.1 — 2026-11-04
 
 - 修复审批通知漏发：`approval/request` 是 waterfall，UI 审批应答器可能先处理并短路；观察者改为 `prepend + global`，发布事件后始终 `next()` 委托，不改变审批结果。

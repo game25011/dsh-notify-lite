@@ -6,17 +6,21 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![CI](https://github.com/game25011/dsh-notify-toast/actions/workflows/ci.yml/badge.svg)](https://github.com/game25011/dsh-notify-toast/actions/workflows/ci.yml)
-![DSH](https://img.shields.io/badge/DSH-0.2.1--rc.2-blue)
+![DSH](https://img.shields.io/badge/DSH-0.2.2--rc.1-blue)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D4)
 
 > dsh-notify-toast 是一款适用于 Windows 10/11 的非官方 DSH 插件（MIT 协议）。它提供聚焦不打扰的后台提醒，通过 Windows 原生通知提示提问、授权与根会话完成；任务栏未读角标按不同根会话计数，同一会话多次完成算一个，1–3 显示数字，超过 3 显示红点。主要代码由 AI 编程助手生成，人类维护者负责需求、调试、测试与发布。
 
-- 源码/本地包名：`dsh-notify-toast` · 版本：`0.4.1` · 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-toast
-- npm 包：`@game25011/dsh-notify-toast@0.4.1`（scoped 分发；源码包名仍为 `dsh-notify-toast`）
-- 适用：DeepSeek Harness Desktop `0.2.1-rc.2`（Electron 壳，profile `desktop`），Windows 10/11
+- 源码/本地包名：`dsh-notify-toast` · 版本：`0.4.2` · 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-toast
+- npm 包：`@game25011/dsh-notify-toast@0.4.2`（scoped 分发；源码包名仍为 `dsh-notify-toast`）
+- 适用：DeepSeek Harness Desktop `0.2.2-rc.1`（Electron 壳，profile `desktop`），Windows 10/11
 - 形态：DSH 官方 bundle（Host + Web Client 两半），通过官方插件管理器安装/卸载
-- 状态：0.4.1 修复审批通知漏发；0.4.0 新增任务栏未读角标（方案 B：不同根会话计数）；0.3.0 原生进度 toast、bar-only 样式、自动收回、点击回会话与 Goal 汇总已在本机简单实测；Goal 边界场景仍待补测；「全部完成后改写标题」为可选功能（默认关）
+- 状态：0.4.2 更新 DSH 0.2.2-rc.1 兼容声明；0.4.1 修复审批通知漏发；0.4.0 新增任务栏未读角标（方案 B：不同根会话计数）；0.3.0 原生进度 toast、bar-only 样式、自动收回、点击回会话与 Goal 汇总已在本机简单实测；Goal 边界场景仍待补测；「全部完成后改写标题」为可选功能（默认关）
 - 截图：![Windows 原生进度通知](docs/assets/native-toast.png)
+
+## 0.4.2 更新
+
+v0.4.2 是元数据与兼容声明补丁，未变更通知核心逻辑。针对 DSH Desktop 0.2.2-rc.1，将 `engines.dsh` 显式覆盖至 `0.2.2-rc.x` 范围以避免 semver 误判，并同步更新 README 徽标。94 项单测、26 项 smoke 及 Host probe 均通过；上游处于预发布期，不作长效兼容承诺。
 
 ## 0.4.1 更新
 
@@ -74,9 +78,9 @@
 
 > 本插件只通过 **官方插件管理器** 或 GitHub Release 安装；不要手改 profile 的 `package.json` 或 `cordis.patch.yml`。
 >
-> npm 包：`@game25011/dsh-notify-toast@0.4.1`；可用 `npm pack @game25011/dsh-notify-toast` 获取 tgz，再按插件管理器安装。
+> npm 包：`@game25011/dsh-notify-toast@0.4.2`；可用 `npm pack @game25011/dsh-notify-toast` 获取 tgz，再按插件管理器安装。
 
-> 插件清单说明：`dsh-plugin.json` 只声明 Host facet（`facets.host`）；Web Client 半由 `package.json` 的 `dsh.client` 声明（同类第三方插件也采用该结构），因此未声明 `facets.client`。DSH 0.2.1-rc.2 的官方插件加载以 `package.json` 的 `dsh.bundle` / `dsh.client` 为准。
+> 插件清单说明：`dsh-plugin.json` 只声明 Host facet（`facets.host`）；Web Client 半由 `package.json` 的 `dsh.client` 声明（同类第三方插件也采用该结构），因此未声明 `facets.client`。DSH 0.2.2-rc.1 的官方插件加载以 `package.json` 的 `dsh.bundle` / `dsh.client` 为准。
 
 ### 方式 0：npm 包（可选）
 
@@ -88,7 +92,7 @@ npm pack @game25011/dsh-notify-toast --registry=https://registry.npmjs.org/
 
 ### 方式 A：应用内插件管理器（推荐）
 
-1. 把交付的 `dsh-notify-toast-0.4.1.tgz` 放到本机任意目录（路径不要含空格）。
+1. 把交付的 `dsh-notify-toast-0.4.2.tgz` 放到本机任意目录（路径不要含空格）。
 2. 在 DSH 里让 Agent 用官方插件管理器安装，或使用插件管理界面：
    - Agent 工具：`plugin_manager` → `action: install_bundle`，`target: <tgz 绝对路径>`
    - 命令行：**仅适用于自管 profile（web/headless）**；官方 Desktop 的 desktop profile 由 Electron 应用的插件管理器管理，请用上面的界面或 Agent 方式。
@@ -112,7 +116,7 @@ plugin_manager → install_bundle → target: <插件目录绝对路径>
 https://raw.githubusercontent.com/game25011/dsh-notify-toast/4a3c83e5634cf9dcac005ec2e9bbd4c4dd828596/market-index.json
 ```
 
-添加后搜索 `dsh-notify-toast` 即可看到本插件，并从市场安装固定版本的 Git 源。  
+添加后搜索 `dsh-notify-toast` 即可看到本插件，并从市场安装固定版本的 Git 源。
 这是**自托管索引**；DSH 官方默认索引不会自动收录本插件，其他用户需要添加同一索引或由官方目录收录。
 
 ### 升级
@@ -208,7 +212,7 @@ Host: koffi user32 SetForegroundWindow ← focus
 
 | 项目 | 说明 |
 |---|---|
-| DSH | `0.2.1-rc.2`（`engines.dsh: >=0.2.1-rc.2 <0.3.0`）；依赖的 Host 事件/RPC/settings 契约在本版本实测 |
+| DSH | `0.2.2-rc.1`（`engines.dsh: >=0.2.1-rc.2 <0.2.2-0 || >=0.2.2-rc.0 <0.3.0`）；Host 事件/RPC/settings 契约在本版本实测 |
 | 操作系统 | Windows 10/11（原生 toast + koffi user32 置前）；macOS/Linux 未验证（本插件目标为 Windows） |
 | 运行形态 | DSH Desktop（Electron，页面 origin `dsh-app://app`）。普通浏览器 Web profile 下 toast 可用，但"置前 Windows 窗口"会降级为浏览器自身聚焦 |
 | 通知权限 | Windows 通知中心需允许应用通知；Electron Desktop 默认放行非媒体权限，若被系统/组策略禁用则只降级不崩溃 |
