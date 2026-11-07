@@ -1,4 +1,4 @@
-# 轻量原生通知（Windows）
+# dsh-notify-lite（Windows 原生通知）
 
 **轻量 · 原生 · 可扩展 · 不打扰**
 
@@ -9,7 +9,7 @@
 ![DSH](https://img.shields.io/badge/DSH-0.2.2--rc.1-blue)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D4)
 
-> dsh-notify-toast 是一款适用于 Windows 10/11 的非官方 DSH 插件（MIT 协议）。它提供聚焦不打扰的后台提醒，通过 Windows 原生通知提示提问、授权与根会话完成；任务栏未读角标按不同根会话计数，同一会话多次完成算一个，1–3 显示数字，超过 3 显示红点。主要代码由 AI 编程助手生成，人类维护者负责需求、调试、测试与发布。
+> dsh-notify-lite 是一款适用于 Windows 10/11 的非官方 DSH 插件（MIT 协议）。它提供聚焦不打扰的后台提醒，通过 Windows 原生通知提示提问、授权与根会话完成；任务栏未读角标按不同根会话计数，同一会话多次完成算一个，1–3 显示数字，超过 3 显示红点。主要代码由 AI 编程助手生成，人类维护者负责需求、调试、测试与发布。
 
 - 源码/本地包名：`dsh-notify-toast` · 版本：`0.4.3` · 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-toast
 - npm 包：`@game25011/dsh-notify-toast@0.4.3`（scoped 分发；源码包名仍为 `dsh-notify-toast`）

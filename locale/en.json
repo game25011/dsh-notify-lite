@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "Lightweight Native Notifications",
-    "description": "Lightweight native Windows notifications for DSH: background alerts for questions, approvals, and root-session completion, plus a taskbar unread badge. Silent while focused; no resident service."
+    "title": "dsh-notify-lite",
+    "description": "dsh-notify-lite: lightweight native Windows notifications for DSH with background alerts for questions, approvals, and root-session completion, plus a taskbar unread badge. Silent while focused; no resident service."
   },
   "nav": "Notifications",
   "notifyQuestionTitle": "DeepSeek has a question for you",
