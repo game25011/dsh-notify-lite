@@ -1,6 +1,6 @@
 {
   "name": "dsh-notify-toast",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "DSH 后台时的 Windows 原生通知与任务栏未读角标：提醒提问/授权/根会话完成，原生进度条与近似自动移除时间，按根会话显示 1–3 或红点，点击尽量回到对应会话；不访问外部网络、不调模型。Windows native toast notifications and a taskbar unread badge for DeepSeek Harness when the window is unfocused.",
   "type": "module",
   "main": "lib/index.js",

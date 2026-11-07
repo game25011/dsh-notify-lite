@@ -430,7 +430,7 @@ function createFakeContext(env, options = {}) {
     if (endpoint === 'config') {
       return Promise.resolve({
         ok: true,
-        value: { ok: true, version: '0.4.2', ns: NS, config: Object.assign({}, api.hostConfig), status: statusValue() },
+        value: { ok: true, version: '0.4.3', ns: NS, config: Object.assign({}, api.hostConfig), status: statusValue() },
       })
     }
     if (endpoint === 'save') {
@@ -858,10 +858,13 @@ async function main() {
     assert.equal(dictionaries.zh.nav, '通知')
     assert.equal(dictionaries.en.nav, 'Notifications')
     assert.ok(main.api.injections.some((entry) => entry.name === 'settings.section'), 'settings.section injected')
+    assert.ok(main.api.injections.some((entry) => entry.name === 'settings.section.icon'), 'native settings icon injected')
     assert.ok(!main.api.injections.some((entry) => entry.name === 'shell.overlay'), 'dead in-app overlay not injected')
-    assert.equal(main.api.registrations.length, 1)
-    const registration = main.api.registrations[0]
-    assert.equal(registration.options.name, 'settings.section')
+    assert.equal(main.api.registrations.length, 2)
+    const registration = main.api.registrations.find((entry) => entry.options.name === 'settings.section')
+    const iconRegistration = main.api.registrations.find((entry) => entry.options.name === 'settings.section.icon')
+    assert.ok(registration, 'settings.section registered')
+    assert.ok(iconRegistration, 'settings.section.icon registered')
     assert.equal(registration.options.id, PKG_ID)
     assert.equal(registration.options.order, 42)
     assert.equal(registration.options.locale, NS)
@@ -870,6 +873,8 @@ async function main() {
     assert.equal(typeof registration.options.inject, 'function')
     assert.equal(typeof registration.options.inject().t, 'function')
     assert.equal(typeof registration.component, 'function')
+    assert.equal(iconRegistration.options.id, PKG_ID)
+    assert.equal(typeof iconRegistration.component, 'function')
     assert.ok(main.api.effects.length >= 5, 'expected lifecycle/audio/leader effects')
   })
 
@@ -931,7 +936,7 @@ async function main() {
       '在线页面',
       '已允许',
       '已连接',
-      '0.4.2',
+      '0.4.3',
     ]) {
       assert.ok(text.includes(fragment), 'settings page missing copy: ' + fragment)
     }

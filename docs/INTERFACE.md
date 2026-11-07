@@ -7,7 +7,7 @@
 
 ```
 PKG_ID    = 'dsh-notify-toast'      // package.json name / 客户端 ModuleLoader id / 行 id / settings ns
-VERSION   = '0.4.2'
+VERSION   = '0.4.3'
 RPC_CHANNEL = '/dsh-notify-toast'   // 官方 Connection RPC 频道（Host rpc.handle）
 LOCALE_NS = 'dsh-notify-toast'      // 客户端 locale 命名空间
 ```

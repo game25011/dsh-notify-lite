@@ -11,12 +11,16 @@
 
 > dsh-notify-toast 是一款适用于 Windows 10/11 的非官方 DSH 插件（MIT 协议）。它提供聚焦不打扰的后台提醒，通过 Windows 原生通知提示提问、授权与根会话完成；任务栏未读角标按不同根会话计数，同一会话多次完成算一个，1–3 显示数字，超过 3 显示红点。主要代码由 AI 编程助手生成，人类维护者负责需求、调试、测试与发布。
 
-- 源码/本地包名：`dsh-notify-toast` · 版本：`0.4.2` · 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-toast
-- npm 包：`@game25011/dsh-notify-toast@0.4.2`（scoped 分发；源码包名仍为 `dsh-notify-toast`）
+- 源码/本地包名：`dsh-notify-toast` · 版本：`0.4.3` · 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-toast
+- npm 包：`@game25011/dsh-notify-toast@0.4.3`（scoped 分发；源码包名仍为 `dsh-notify-toast`）
 - 适用：DeepSeek Harness Desktop `0.2.2-rc.1`（Electron 壳，profile `desktop`），Windows 10/11
 - 形态：DSH 官方 bundle（Host + Web Client 两半），通过官方插件管理器安装/卸载
-- 状态：0.4.2 更新 DSH 0.2.2-rc.1 兼容声明；0.4.1 修复审批通知漏发；0.4.0 新增任务栏未读角标（方案 B：不同根会话计数）；0.3.0 原生进度 toast、bar-only 样式、自动收回、点击回会话与 Goal 汇总已在本机简单实测；Goal 边界场景仍待补测；「全部完成后改写标题」为可选功能（默认关）
+- 状态：0.4.3 修复 DSH 0.2.2 设置页图标重复；0.4.2 更新 DSH 0.2.2-rc.1 兼容声明；0.4.1 修复审批通知漏发；0.4.0 新增任务栏未读角标（方案 B：不同根会话计数）；0.3.0 原生进度 toast、bar-only 样式、自动收回、点击回会话与 Goal 汇总已在本机简单实测；Goal 边界场景仍待补测；「全部完成后改写标题」为可选功能（默认关）
 - 截图：![Windows 原生进度通知](docs/assets/native-toast.png)
+
+## 0.4.3 更新
+
+修复 DSH 0.2.2 设置页导航图标重复：改用原生 `settings.section.icon` slot，让 shell 用同一个通知铃铛图标替换默认齿轮；旧版 DSH 仍保留原有 DOM fallback。没有改变通知核心逻辑。
 
 ## 0.4.2 更新
 
@@ -78,7 +82,7 @@ v0.4.2 是元数据与兼容声明补丁，未变更通知核心逻辑。针对 
 
 > 本插件只通过 **官方插件管理器** 或 GitHub Release 安装；不要手改 profile 的 `package.json` 或 `cordis.patch.yml`。
 >
-> npm 包：`@game25011/dsh-notify-toast@0.4.2`；可用 `npm pack @game25011/dsh-notify-toast` 获取 tgz，再按插件管理器安装。
+> npm 包：`@game25011/dsh-notify-toast@0.4.3`；可用 `npm pack @game25011/dsh-notify-toast` 获取 tgz，再按插件管理器安装。
 
 > 插件清单说明：`dsh-plugin.json` 只声明 Host facet（`facets.host`）；Web Client 半由 `package.json` 的 `dsh.client` 声明（同类第三方插件也采用该结构），因此未声明 `facets.client`。DSH 0.2.2-rc.1 的官方插件加载以 `package.json` 的 `dsh.bundle` / `dsh.client` 为准。
 
@@ -92,7 +96,7 @@ npm pack @game25011/dsh-notify-toast --registry=https://registry.npmjs.org/
 
 ### 方式 A：应用内插件管理器（推荐）
 
-1. 把交付的 `dsh-notify-toast-0.4.2.tgz` 放到本机任意目录（路径不要含空格）。
+1. 把交付的 `dsh-notify-toast-0.4.3.tgz` 放到本机任意目录（路径不要含空格）。
 2. 在 DSH 里让 Agent 用官方插件管理器安装，或使用插件管理界面：
    - Agent 工具：`plugin_manager` → `action: install_bundle`，`target: <tgz 绝对路径>`
    - 命令行：**仅适用于自管 profile（web/headless）**；官方 Desktop 的 desktop profile 由 Electron 应用的插件管理器管理，请用上面的界面或 Agent 方式。

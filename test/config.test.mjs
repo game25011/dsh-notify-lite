@@ -32,7 +32,7 @@ import {
 
 test('constants match docs/INTERFACE.md §0', () => {
   assert.equal(PKG_ID, 'dsh-notify-toast')
-  assert.equal(VERSION, '0.4.2')
+  assert.equal(VERSION, '0.4.3')
   assert.equal(RPC_CHANNEL, '/dsh-notify-toast')
   assert.equal(SETTINGS_NS, 'dsh-notify-toast')
   assert.equal(LOCALE_NS, 'dsh-notify-toast')

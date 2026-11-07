@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.3 — 2026-11-07
+
+- 修复 DSH 0.2.2 设置页导航图标重复：优先注册原生 `settings.section.icon` slot，让 shell 用铃铛替换默认齿轮；旧版 DSH 保留 DOM fallback。
+- 未改变通知核心逻辑；单测、client smoke 和 Host probe 通过。
+
 ## 0.4.2 — 2026-11-07
 
 - 元数据与兼容声明补丁：支持 DSH Desktop 0.2.2-rc.1，`engines.dsh` 显式覆盖 `0.2.2-rc.x` 范围，更新 README 徽标。
