@@ -74,20 +74,20 @@
           "native"
         ],
         "sortKeys": {
-          "published": 1793801174
+          "published": 1794029632
         }
       },
       "versions": [
         {
-          "version": "0.4.1",
-          "publishTimestamp": 1793801174,
+          "version": "0.4.2",
+          "publishTimestamp": 1794029632,
           "source": {
             "type": "git",
             "url": "https://github.com/game25011/dsh-notify-toast",
-            "commit": "ad4d19a0f814ffef179a73e86341de019477e806"
+            "commit": "fe8cf0e22b4911401833f547b68b1ba4fa251cd1"
           },
           "engines": {
-            "dsh": ">=0.2.1-rc.2 <0.3.0"
+            "dsh": ">=0.2.1-rc.2 <0.2.2-0 || >=0.2.2-rc.0 <0.3.0"
           }
         }
       ]
