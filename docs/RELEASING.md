@@ -205,7 +205,7 @@ tag 指向已验证的发布 commit：
 - GitHub Release `https://github.com/<github-owner>/<repo>/releases/tag/v0.3.0` 可访问，附件（可选）可下载。
 - CI `https://github.com/<github-owner>/<repo>/actions` 最近一次运行绿色；矩阵为 windows-latest / ubuntu-latest × Node 22 / 24，共 4 个组合。
 - DSH 插件管理器：0.3.0 仍按 tgz 交付——用 `plugin_manager` 的 `install_bundle` 指向 Release 附件 `dsh-notify-toast-0.3.0.tgz`（或本地 `npm pack` 产物）；首次安装/升级后重启 DSH。**从 npm registry 直接安装的体验尚未在 0.3.0 上验证，不要写入安装文档宣称已验证。**
-- 回填文档：README、README.en.md、SECURITY 已写入本仓库真实地址 `https://github.com/game25011/dsh-notify-toast`；Code of Conduct 使用 SECURITY.md 的私密渠道。发布前只需确认 README/README.en.md 的截图已补，且本手册示例中的 `<github-owner>` / `<repo>` / `<maintainer-email>` 已按实际替换；如果这些改动影响已发布的 tgz，按 9.1 发 patch，而不是改已发布的 0.3.0。
+- 回填文档：README、README.en.md、SECURITY 已写入本仓库真实地址 `https://github.com/game25011/dsh-notify-lite`；Code of Conduct 使用 SECURITY.md 的私密渠道。发布前只需确认 README/README.en.md 的截图已补，且本手册示例中的 `<github-owner>` / `<repo>` / `<maintainer-email>` 已按实际替换；如果这些改动影响已发布的 tgz，按 9.1 发 patch，而不是改已发布的 0.3.0。
 
 ## 9. 回滚与撤销
 
@@ -270,7 +270,7 @@ npm 的撤销政策要点（以 npm 官方文档为准）：
 | `<github-user-id>` | 采用 noreply 邮箱时的 `12345678+<github-owner>@users.noreply.github.com` 前缀 | GitHub 数字用户 ID |
 | 截图 | README / README.en.md 的截图待补说明 | 一张真实 Windows 右下角 toast 截图（PNG，不伪造） |
 
-> 本仓库实际地址为 `https://github.com/game25011/dsh-notify-toast`，已写入 `package.json`、`README.md`、`README.en.md` 与 `SECURITY.md`；上表中的占位符只保留在本手册的命令示例里，首次执行时按实际替换即可。
+> 本仓库实际地址为 `https://github.com/game25011/dsh-notify-lite`，已写入 `package.json`、`README.md`、`README.en.md` 与 `SECURITY.md`；上表中的占位符只保留在本手册的命令示例里，首次执行时按实际替换即可。
 
 发布前检查仓库中是否还有未替换的占位符和本机信息：
 

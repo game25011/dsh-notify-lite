@@ -5,13 +5,13 @@
 中文 | [English](./README.en.md)
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![CI](https://github.com/game25011/dsh-notify-toast/actions/workflows/ci.yml/badge.svg)](https://github.com/game25011/dsh-notify-toast/actions/workflows/ci.yml)
+[![CI](https://github.com/game25011/dsh-notify-lite/actions/workflows/ci.yml/badge.svg)](https://github.com/game25011/dsh-notify-lite/actions/workflows/ci.yml)
 ![DSH](https://img.shields.io/badge/DSH-0.2.2--rc.1-blue)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D4)
 
 > dsh-notify-lite 是一款适用于 Windows 10/11 的非官方 DSH 插件（MIT 协议）。它提供聚焦不打扰的后台提醒，通过 Windows 原生通知提示提问、授权与根会话完成；任务栏未读角标按不同根会话计数，同一会话多次完成算一个，1–3 显示数字，超过 3 显示红点。主要代码由 AI 编程助手生成，人类维护者负责需求、调试、测试与发布。
 
-- 源码/本地包名：`dsh-notify-toast` · 版本：`0.4.3` · 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-toast
+- 源码/本地包名：`dsh-notify-toast` · 版本：`0.4.3` · 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-lite
 - npm 包：`@game25011/dsh-notify-toast@0.4.3`（scoped 分发；源码包名仍为 `dsh-notify-toast`）
 - 适用：DeepSeek Harness Desktop `0.2.2-rc.1`（Electron 壳，profile `desktop`），Windows 10/11
 - 形态：DSH 官方 bundle（Host + Web Client 两半），通过官方插件管理器安装/卸载
@@ -117,7 +117,7 @@ plugin_manager → install_bundle → target: <插件目录绝对路径>
 本仓库自带 `market-index.json`。在 DSH 的插件市场/发现页添加自定义索引：
 
 ```text
-https://raw.githubusercontent.com/game25011/dsh-notify-toast/4b81b3f2cfad1f9e8bee100cbd247b0a47b38a21/market-index.json
+https://raw.githubusercontent.com/game25011/dsh-notify-lite/4b81b3f2cfad1f9e8bee100cbd247b0a47b38a21/market-index.json
 ```
 
 添加后搜索 `dsh-notify-toast` 即可看到本插件，并从市场安装固定版本的 Git 源。
@@ -285,7 +285,7 @@ npm pack                      生成交付用 tgz
 
 ## 开源与贡献
 
-- 仓库：https://github.com/game25011/dsh-notify-toast
+- 仓库：https://github.com/game25011/dsh-notify-lite
 - 英文文档：[README.en.md](./README.en.md)
 - 贡献指引：[CONTRIBUTING.md](./CONTRIBUTING.md)
 - 安全问题：[SECURITY.md](./SECURITY.md)（请走私密 GitHub Security Advisories，不要公开 issue）

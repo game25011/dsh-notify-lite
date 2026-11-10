@@ -36,11 +36,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/game25011/dsh-notify-toast.git"
+    "url": "git+https://github.com/game25011/dsh-notify-lite.git"
   },
-  "homepage": "https://github.com/game25011/dsh-notify-toast#readme",
+  "homepage": "https://github.com/game25011/dsh-notify-lite#readme",
   "bugs": {
-    "url": "https://github.com/game25011/dsh-notify-toast/issues"
+    "url": "https://github.com/game25011/dsh-notify-lite/issues"
   },
   "publishConfig": {
     "access": "public"

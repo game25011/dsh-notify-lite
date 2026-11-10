@@ -54,9 +54,9 @@
       },
       "icon": "icon.svg",
       "author": "game25011 <1449262586@QQ.com>",
-      "homepage": "https://github.com/game25011/dsh-notify-toast",
+      "homepage": "https://github.com/game25011/dsh-notify-lite",
       "repository": {
-        "url": "https://github.com/game25011/dsh-notify-toast"
+        "url": "https://github.com/game25011/dsh-notify-lite"
       },
       "metadata": {
         "category": "notifications",
@@ -83,7 +83,7 @@
           "publishTimestamp": 1794030772,
           "source": {
             "type": "git",
-            "url": "https://github.com/game25011/dsh-notify-toast",
+            "url": "https://github.com/game25011/dsh-notify-lite",
             "commit": "3edb96d9527303cb443226505be49057f71be30f"
           },
           "engines": {
