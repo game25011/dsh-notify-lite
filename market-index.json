@@ -84,7 +84,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/game25011/dsh-notify-lite",
-            "commit": "3edb96d9527303cb443226505be49057f71be30f"
+            "commit": "9e3564267135b60b5792f23ebe2f20462f3a5c48"
           },
           "engines": {
             "dsh": ">=0.2.1-rc.2 <0.2.2-0 || >=0.2.2-rc.0 <0.3.0"
