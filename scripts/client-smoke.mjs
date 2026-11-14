@@ -430,7 +430,7 @@ function createFakeContext(env, options = {}) {
     if (endpoint === 'config') {
       return Promise.resolve({
         ok: true,
-        value: { ok: true, version: '0.4.3', ns: NS, config: Object.assign({}, api.hostConfig), status: statusValue() },
+        value: { ok: true, version: '0.5.0', ns: NS, config: Object.assign({}, api.hostConfig), status: statusValue() },
       })
     }
     if (endpoint === 'save') {
@@ -908,17 +908,19 @@ async function main() {
     const tree = registration.component({})
     const text = textOf(tree)
     for (const fragment of [
-      '通知',
+      '提醒内容',
+      '提醒方式',
       '启用通知',
       '提问与方案确认',
-      '授权（审批）',
-      '本轮回复结束',
+      '授权请求',
+      '本轮完成',
+      '任务栏未读角标',
+      '高级设置',
       '目标模式结束后汇总',
       '通知显示方式',
       'Windows 通知（带进度条）',
-      '通知自动移除时间',
       '正文长度',
-      '隐私模式（只显示标题）',
+      '只显示标题',
       '提示音',
       '风铃',
       '清铃',
@@ -926,9 +928,8 @@ async function main() {
       '音量',
       '合并间隔',
       '发送测试通知',
-      '状态',
+      '诊断与状态',
       '通知权限',
-      '窗口焦点',
       'Host 连接',
       '窗口置前',
       '设置持久化',
@@ -936,13 +937,17 @@ async function main() {
       '在线页面',
       '已允许',
       '已连接',
-      '0.4.3',
+      '0.5.0',
     ]) {
       assert.ok(text.includes(fragment), 'settings page missing copy: ' + fragment)
     }
     assert.ok(findElement(tree, (node) => node.type === 'button' && node.props.role === 'switch'), 'switch controls exist')
     assert.ok(findElement(tree, (node) => node.type === 'input' && node.props.type === 'range' && node.props.min === '20'), 'body length range exists')
-    assert.ok(findElement(tree, (node) => node.type === 'input' && node.props.type === 'range' && node.props.min === '3'), 'native duration range exists')
+    assert.equal(
+      findElement(tree, (node) => node.type === 'input' && node.props.type === 'range' && node.props.min === '3'),
+      null,
+      'native duration range is hidden in compatibility mode',
+    )
     assert.ok(findElement(tree, (node) => node.type === 'input' && node.props.type === 'range' && node.props.min === '0'), 'volume range exists')
     assert.ok(findElement(tree, (node) => node.type === 'select'), 'sound select exists')
     assert.ok(
@@ -955,6 +960,25 @@ async function main() {
       ),
       'test notification button exists',
     )
+    assert.ok(findElement(tree, (node) => node.type === 'details'), 'advanced/diagnostics disclosures exist')
+    const diagnostics = findElement(
+      tree,
+      (node) => node.type === 'details' && node.props.id === 'dsh-notify-toast-diagnostics',
+    )
+    assert.ok(diagnostics, 'diagnostics disclosure exists')
+    assert.notEqual(diagnostics.props.open, true, 'diagnostics is collapsed by default')
+  })
+
+  await run('duration row follows native progress mode', async () => {
+    const durationEnv = createEnvironment({ permission: 'granted' })
+    const durationPlugin = durationEnv.state.definitions[0].factory(fakeRequire)
+    const duration = createFakeContext(durationEnv, { config: { notificationMode: 'native-progress' } })
+    durationPlugin.apply(duration.ctx)
+    await settle()
+    reactStub.hooks.reset()
+    const tree = duration.api.registrations[0].component({})
+    assert.ok(textOf(tree).includes('自动移除时间'), 'duration row shown in native progress mode')
+    await disposeFakeContext(duration.api)
   })
 
   await run('test button calls the Host test endpoint', async () => {
