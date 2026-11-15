@@ -430,7 +430,7 @@ function createFakeContext(env, options = {}) {
     if (endpoint === 'config') {
       return Promise.resolve({
         ok: true,
-        value: { ok: true, version: '0.5.0', ns: NS, config: Object.assign({}, api.hostConfig), status: statusValue() },
+        value: { ok: true, version: '0.5.1', ns: NS, config: Object.assign({}, api.hostConfig), status: statusValue() },
       })
     }
     if (endpoint === 'save') {
@@ -937,7 +937,7 @@ async function main() {
       '在线页面',
       '已允许',
       '已连接',
-      '0.5.0',
+      '0.5.1',
     ]) {
       assert.ok(text.includes(fragment), 'settings page missing copy: ' + fragment)
     }
@@ -960,13 +960,24 @@ async function main() {
       ),
       'test notification button exists',
     )
-    assert.ok(findElement(tree, (node) => node.type === 'details'), 'advanced/diagnostics disclosures exist')
-    const diagnostics = findElement(
+    const advancedToggle = findElement(
       tree,
-      (node) => node.type === 'details' && node.props.id === 'dsh-notify-toast-diagnostics',
+      (node) => node.type === 'button' && node.props['aria-controls'] === 'dsh-notify-toast-advanced-body',
     )
-    assert.ok(diagnostics, 'diagnostics disclosure exists')
-    assert.notEqual(diagnostics.props.open, true, 'diagnostics is collapsed by default')
+    const diagnosticsToggle = findElement(
+      tree,
+      (node) => node.type === 'button' && node.props['aria-controls'] === 'dsh-notify-toast-diagnostics-body',
+    )
+    assert.ok(advancedToggle, 'advanced disclosure toggle exists')
+    assert.ok(diagnosticsToggle, 'diagnostics disclosure toggle exists')
+    assert.equal(diagnosticsToggle.props['aria-expanded'], 'false', 'diagnostics is collapsed by default')
+    const advancedBody = findElement(
+      tree,
+      (node) => node.type === 'div' && node.props.id === 'dsh-notify-toast-advanced-body',
+    )
+    assert.ok(advancedBody, 'advanced disclosure body exists')
+    assert.equal(advancedBody.props['aria-hidden'], 'true', 'advanced content is hidden by default')
+    assert.equal(advancedBody.props.style.gridTemplateRows, '0fr', 'advanced content starts collapsed')
   })
 
   await run('duration row follows native progress mode', async () => {
