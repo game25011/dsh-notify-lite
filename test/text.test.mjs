@@ -154,3 +154,28 @@ test('toSingleLine: collapses whitespace without touching markdown', () => {
   assert.equal(toSingleLine(null), '')
   assert.equal(toSingleLine(7), '')
 })
+
+test('cleanMarkdownText: inline code survives tag and emphasis stripping', () => {
+  assert.equal(cleanMarkdownText('Returns `Vec<String>` now'), 'Returns Vec<String> now')
+  assert.equal(cleanMarkdownText('Edit `__init__.py` and `*args`'), 'Edit __init__.py and *args')
+  assert.equal(cleanMarkdownText('Use `a | b` here'), 'Use a | b here')
+})
+
+test('cleanMarkdownText: only tag-shaped markup is removed', () => {
+  assert.equal(cleanMarkdownText('if a < b and c > d'), 'if a < b and c > d')
+  assert.equal(cleanMarkdownText('see <https://example.com/x> or <br/> <span class="x">ok</span>'), 'see or ok')
+})
+
+test('firstParagraph: skips heading-only blocks when prose follows', () => {
+  assert.equal(firstParagraph('## Summary\n\nAll checks pass.'), 'All checks pass.')
+  assert.equal(firstParagraph('**总结**\n\n已修复登录问题。'), '已修复登录问题。')
+  assert.equal(firstParagraph('## Summary\nAll checks pass.\n\nMore.'), 'All checks pass.')
+  // A heading with nothing after it is still better than no body.
+  assert.equal(firstParagraph('## Done'), 'Done')
+})
+
+test('firstParagraph: a colon lead-in is joined with the block it introduces', () => {
+  assert.equal(firstParagraph('Here is what changed:\n\n- fixed login\n- added tests\n\nDone.'), 'Here is what changed: fixed login added tests')
+  assert.equal(firstParagraph('改动如下：\n\n```js\ncode\n```\n\n修复了登录。'), '改动如下： 修复了登录。')
+  assert.equal(firstParagraph('Only a lead-in:'), 'Only a lead-in:')
+})

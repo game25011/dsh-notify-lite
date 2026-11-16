@@ -11,12 +11,18 @@
 
 > dsh-notify-lite 是一款适用于 Windows 10/11 的非官方 DSH 插件（MIT 协议）。它提供聚焦不打扰的后台提醒，通过 Windows 原生通知提示提问、授权与根会话完成；任务栏未读角标按不同根会话计数，同一会话多次完成算一个，1–3 显示数字，超过 3 显示红点。主要代码由 AI 编程助手生成，人类维护者负责需求、调试、测试与发布。
 
-- 源码/本地包名：`dsh-notify-toast` · 版本：`0.5.1` · 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-lite
-- npm 包：`@game25011/dsh-notify-toast@0.5.1`（scoped 分发；源码包名仍为 `dsh-notify-toast`）
+- 源码/本地包名：`dsh-notify-toast` · 版本：`0.5.2`（未发布）· 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-lite
+- npm 包：`@game25011/dsh-notify-toast@0.5.1`（scoped 分发；源码包名仍为 `dsh-notify-toast`；0.5.2 尚未发布到 npm）
 - 适用：DeepSeek Harness Desktop `0.2.2-rc.3`（Electron 壳，profile `desktop`），Windows 10/11
 - 形态：DSH 官方 bundle（Host + Web Client 两半），通过官方插件管理器安装/卸载
-- 状态：0.5.1 为二级菜单加入展开/收起动效；0.5.0 重构设置页（分组、低频项折叠、诊断收纳）；0.4.3 修复 DSH 0.2.2 设置页图标重复；0.4.2 更新 DSH 0.2.2-rc.1 兼容声明；0.4.1 修复审批通知漏发；0.4.0 新增任务栏未读角标；0.3.0 原生进度 toast 与 Goal 汇总。
+- 状态：0.5.2（未发布）收紧设置页并修复若干 Host 可靠性问题；0.5.1 为二级菜单加入展开/收起动效；0.5.0 重构设置页（分组、低频项折叠、诊断收纳）；0.4.3 修复 DSH 0.2.2 设置页图标重复；0.4.2 更新 DSH 0.2.2-rc.1 兼容声明；0.4.1 修复审批通知漏发；0.4.0 新增任务栏未读角标；0.3.0 原生进度 toast 与 Goal 汇总。
 - 截图：![Windows 原生进度通知](docs/assets/native-toast.png)
+
+## 0.5.2 更新（未发布）
+
+设置页：折叠区内不再嵌套第二层卡片；总开关关闭时，依赖它的子开关变灰禁用；诊断里有问题的值标红；键盘焦点有可见描边；「全部完成后改写标题」输入框可以正常输入空格和清空重打；折叠区改用 SVG 三角与 `visibility` 收尾，修复 React 19 下收起内容仍可被 Tab 聚焦的问题，减少动态效果改由 CSS 媒体查询实时生效。
+
+Host：任务栏角标 helper 失败时不再无限重启进程；点击回窗与角标只会选中 DSH 自己的窗口（不再可能命中 VS Code、浏览器等其他 Chromium 窗口）；Host 重启后长轮询不再跳过新 Host 的前几条事件；DSH 未提供 turn 编号时，同一会话 5 秒内的第二次完成不再被误判为重复；完成正文不再跨轮借用上一轮回复，并能跳过「## 总结」这类纯标题段、把「改动如下：」与下一段拼接；提问观察者与审批一致改为 `prepend + global`。原生通知 helper 已缓存时，DSH 启动不再拉起 PowerShell 预热；角标按任务栏 DPI 的实际像素尺寸绘制并像素对齐，小尺寸更清晰（含义不变）。
 
 ## 0.5.1 更新
 

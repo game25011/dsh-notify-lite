@@ -144,3 +144,71 @@ test('activation rejects a bad token', async () => {
     manager.dispose()
   }
 })
+
+test('warm spawns nothing when the helper DLL for this source is cached', async () => {
+  const { mkdtempSync, writeFileSync, rmSync } = await import('node:fs')
+  const { tmpdir } = await import('node:os')
+  const { join } = await import('node:path')
+  const { createHash } = await import('node:crypto')
+  const dir = mkdtempSync(join(tmpdir(), 'dsh-notify-warm-'))
+  try {
+    const source = join(dir, 'native-toast-helper.cs')
+    writeFileSync(source, 'class X {}')
+    const hash = createHash('sha256').update('class X {}').digest('hex')
+    const { manager, spawned } = createManager({ helperSourcePath: source, cacheRoot: dir })
+    try {
+      // Cache miss: compile once.
+      assert.equal(await manager.warm(), true)
+      assert.equal(spawned.length, 1)
+    } finally {
+      manager.dispose()
+    }
+    writeFileSync(join(dir, hash + '.dll'), 'compiled')
+    const cached = createManager({ helperSourcePath: source, cacheRoot: dir })
+    try {
+      assert.equal(await cached.manager.warm(), true)
+      assert.equal(cached.spawned.length, 0, 'a cached DLL needs no PowerShell warm-up')
+    } finally {
+      cached.manager.dispose()
+    }
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('show waits for an in-flight warm-up instead of compiling in parallel', async () => {
+  const { spawnImpl, spawned } = fakeSpawn()
+  let releaseWarm = null
+  const slowSpawn = (command, args) => {
+    const child = spawnImpl(command, args)
+    if (args.includes('-WarmOnly')) {
+      // Hold the warm-up until the test releases it.
+      child.stdout.emit = ((emit) => (event, ...rest) => {
+        if (event === 'data' && releaseWarm === null) {
+          releaseWarm = () => emit.call(child.stdout, event, ...rest)
+          return true
+        }
+        return emit.call(child.stdout, event, ...rest)
+      })(child.stdout.emit)
+    }
+    return child
+  }
+  const manager = createNativeToastManager({
+    scriptPath: 'C:\\fake\\native-toast.ps1',
+    spawnProcess: slowSpawn,
+    onActivate: () => {},
+  })
+  try {
+    const warming = manager.warm()
+    const showing = manager.show({ kind: 'complete', title: 't', body: 'b', durationMs: 3000 })
+    await new Promise((resolve) => setTimeout(resolve, 30))
+    assert.equal(spawned.length, 1, 'no toast helper starts while the warm-up compiles')
+    releaseWarm()
+    assert.equal(await warming, true)
+    const shown = await showing
+    assert.equal(shown.ok, true)
+    assert.equal(spawned.length, 2)
+  } finally {
+    manager.dispose()
+  }
+})

@@ -430,7 +430,7 @@ function createFakeContext(env, options = {}) {
     if (endpoint === 'config') {
       return Promise.resolve({
         ok: true,
-        value: { ok: true, version: '0.5.1', ns: NS, config: Object.assign({}, api.hostConfig), status: statusValue() },
+        value: { ok: true, version: '0.5.2', ns: NS, config: Object.assign({}, api.hostConfig), status: statusValue() },
       })
     }
     if (endpoint === 'save') {
@@ -937,7 +937,7 @@ async function main() {
       '在线页面',
       '已允许',
       '已连接',
-      '0.5.1',
+      '0.5.2',
     ]) {
       assert.ok(text.includes(fragment), 'settings page missing copy: ' + fragment)
     }
@@ -1246,6 +1246,71 @@ async function main() {
   })
 
   // ---- 11. Malformed RPC results are ignored ----
+  await run('the poll echoes the Host queue epoch so a Host restart resynchronizes', async () => {
+    const epochEnv = createEnvironment({ permission: 'granted', focused: false })
+    const epochPlugin = epochEnv.state.definitions[0].factory(fakeRequire)
+    const epoch = createFakeContext(epochEnv, { config: { notificationMode: 'native' } })
+    epochPlugin.apply(epoch.ctx)
+    await settle()
+    assert.equal(epoch.api.polls[0].payload.epoch, undefined, 'the first poll has no epoch yet')
+    const first = epoch.api.polls[epoch.api.polls.length - 1]
+    first.resolve({ ok: true, value: { ok: true, events: [], next: 7, serverTime: Date.now(), epoch: 'host-1' } })
+    await settle()
+    const second = epoch.api.polls[epoch.api.polls.length - 1]
+    assert.equal(second.payload.after, 7)
+    assert.equal(second.payload.epoch, 'host-1', 'the cursor is sent with the epoch it belongs to')
+    await disposeFakeContext(epoch.api)
+  })
+
+  await run('the system toast probe counts one click even when both click paths fire', async () => {
+    const probeEnv = createEnvironment({ permission: 'granted', focused: false })
+    probeEnv.sandbox.Notification.prototype.addEventListener = function addEventListener(type, handler) {
+      this.listeners = this.listeners || []
+      if (type === 'click') this.listeners.push(handler)
+    }
+    const probePlugin = probeEnv.state.definitions[0].factory(fakeRequire)
+    const probe = createFakeContext(probeEnv)
+    probePlugin.apply(probe.ctx)
+    await settle()
+    reactStub.hooks.reset()
+    const tree = probe.api.registrations[0].component({})
+    const button = findElement(tree, (node) => node.type === 'button' && textOf(node).includes('测试系统通知'))
+    assert.ok(button, 'system test button found')
+    button.props.onClick()
+    const toast = probeEnv.state.notifications[probeEnv.state.notifications.length - 1]
+    assert.equal(toast.title, 'DSH 系统通知测试')
+    toast.onclick()
+    for (const handler of toast.listeners || []) handler()
+    await settle()
+    assert.equal(probe.api.rpcCalls.filter((call) => call.endpoint === 'focus').length, 1, 'one focus request per click')
+    await disposeFakeContext(probe.api)
+  })
+
+  await run('the all-done title field keeps a typed space while editing', async () => {
+    const titleEnv = createEnvironment({ permission: 'granted' })
+    const titlePlugin = titleEnv.state.definitions[0].factory(fakeRequire)
+    const titled = createFakeContext(titleEnv, { config: { allDoneTitleEnabled: true, allDoneTitle: 'All' } })
+    titlePlugin.apply(titled.ctx)
+    await settle()
+    const findInput = () => {
+      reactStub.hooks.index = 0
+      const tree = titled.api.registrations[0].component({})
+      return findElement(tree, (node) => node.type === 'input' && node.props.id === 'dsh-notify-toast-text-all-done-title')
+    }
+    reactStub.hooks.reset()
+    const input = findInput()
+    assert.ok(input, 'title input rendered')
+    input.props.onFocus()
+    input.props.onChange({ target: { value: 'All ' } })
+    assert.equal(findInput().props.value, 'All ', 'the draft keeps the trailing space')
+    await new Promise((resolve) => setTimeout(resolve, 320))
+    await settle()
+    const save = titled.api.rpcCalls.filter((call) => call.endpoint === 'save').pop()
+    assert.ok(save, 'the title was saved')
+    assert.equal(save.payload.patch.allDoneTitle, 'All', 'the saved value is normalized')
+    await disposeFakeContext(titled.api)
+  })
+
   await run('malformed Host results do not throw or show toasts', async () => {
     const malformedEnv = createEnvironment({ permission: 'granted', focused: false })
     const malformedPlugin = malformedEnv.state.definitions[0].factory(fakeRequire)

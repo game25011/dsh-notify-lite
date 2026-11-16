@@ -157,6 +157,17 @@ assert.equal(approvalOutcome, 'allowed-once')
 assert.equal(approvalDelegated, true, 'approval observer always delegates')
 console.log('approval observer: prepend/global + delegate ✓')
 
+const questionRegistration = calls.eventListeners.find((entry) => entry.eventName === 'user-questions/request')
+assert.ok(questionRegistration, 'user-questions/request listener is registered')
+assert.equal(questionRegistration.options && questionRegistration.options.prepend, true, 'question observer is prepended before the UI answerer')
+assert.equal(questionRegistration.options && questionRegistration.options.global, true, 'question observer receives scoped requests')
+let questionDelegated = false
+await questionRegistration.listener({ agent: { id: 'session-question' }, questions: [{ question: 'probe?' }] }, async () => {
+  questionDelegated = true
+})
+assert.equal(questionDelegated, true, 'question observer always delegates')
+console.log('question observer: prepend/global + delegate ✓')
+
 function request(body, { method = 'POST', url = '/dsh-notify-toast/health', headers = {} } = {}) {
   const req = Readable.from([Buffer.from(typeof body === 'string' ? body : JSON.stringify(body))])
   req.method = method

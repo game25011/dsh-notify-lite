@@ -7,7 +7,7 @@
 
 ```
 PKG_ID    = 'dsh-notify-toast'      // package.json name / 客户端 ModuleLoader id / 行 id / settings ns
-VERSION   = '0.5.1'
+VERSION   = '0.5.2'
 RPC_CHANNEL = '/dsh-notify-toast'   // 官方 Connection RPC 频道（Host rpc.handle）
 LOCALE_NS = 'dsh-notify-toast'      // 客户端 locale 命名空间
 ```
@@ -68,13 +68,13 @@ export function apply(ctx, config) { ... }  // 注册事件/路由/清理；无�
 |---|---|---|
 | `config` | `{}` | `{ok:true, version, ns, config, status:{settingsAvailable, nativeFocus, platform, clients, transport, configSource, stats, lastEvent}}` |
 | `save` | `{patch:{...}}` | `{ok:true, config, status}`；非法字段/越界 `{ok:false,error:{code,message}}` |
-| `poll` | `{after:number, wait:number}` | `{ok:true, events:[EventPayload...], next:number, serverTime:number}`；无事件时最多挂起 wait ms（夹 1000–25000） |
+| `poll` | `{after:number, wait:number, epoch?:string}` | `{ok:true, events:[EventPayload...], next:number, serverTime:number, epoch:string}`；无事件时最多挂起 wait ms（夹 1000–25000）；`epoch` 与当前队列不同（Host 已重启）时从游标 0 重新取（0.5.2） |
 | `health` | `{}` | `{ok:true, version, ns, settingsAvailable, platform, nativeFocus, clients, status}` |
 | `test` | `{}` | `{ok:true, queued:boolean}`；向事件队列发布 `kind:'test'` |
 | `focus` | `{sessionId?:string}` | `{ok:true, native:boolean}`；尽力置前，绝不抛错 |
 | `taskbar-badge` | `{count:number}`（0–99） | `{ok:true, count}`；0 清除，1–3 数字，>3 红点；未启用时返回 `{count:0,disabled:true}` |
 
-- 事件队列：环形缓冲（最多 200 条）；`poll` 用 `after` 游标增量取；等待者由新事件立即唤醒；客户端断开由 AbortSignal 清理；插件卸载时全部 resolve 空结果并清理计时器。
+- 事件队列：环形缓冲（最多 200 条）；每个 Host 进程一个随机 `epoch`；`poll` 用 `after` 游标增量取，客户端回传上次见到的 `epoch`，不一致则从头取（客户端的 120 s 新鲜度窗口防止回放旧事件）；等待者由新事件立即唤醒；客户端断开由 AbortSignal 清理；插件卸载时全部 resolve 空结果并清理计时器。
 
 `EventPayload`（JSON，Host 只发送**未截断的清洗后原文**，截断由 Client 按配置执行）：
 
@@ -121,28 +121,28 @@ export function apply(ctx, config) { ... }  // 注册事件/路由/清理；无�
 
 ### 2.5 事件检测
 
-1. `approval/request`：`(req, next) => { try{ publishApproval(req) }catch{} ; return next() }`（必须调用 next）。
-2. `user-questions/request`：同上，`publishQuestion(request)`。
+1. `approval/request`：`(req, next) => { try{ publishApproval(req) }catch{} ; return next() }`（必须调用 next），以 `{prepend:true, global:true}` 注册。
+2. `user-questions/request`：同上，`publishQuestion(request)`；0.5.2 起同样 `{prepend:true, global:true}`。
 3. `session/event`：`goal/change` 更新 goal 状态；`user/message(source.kind=goal)` 记录已准入的 Goal Round；`turn/start` 跟踪 all-done；`turn/end` 在 goal active+armed 时只缓存，不逐轮发布；`goal/change` 的 complete/pause/block/clear、Round 上限或 `goal/activation-changed(disarmed)` 后按 `roundsStarted` 增量汇总一条。`goalSummaryEnabled` 默认开。
    - 全部完成标题（可选，默认关）：根会话 `turn/start` 进入 running 集合；同一时刻 ≥2 个根会话运行才 arm；`turn/end` 全部结束且无 error/aborted 时，用 `ctx.get('sessionTitle').rename(lastSession, allDoneTitle)` 改最后一个结束会话的标题；只有一个会话运行时不触发。
    - `isRoot`：`!session.header.parentSession && session.header.origin !== 'subagent'`。
-   - 完成正文：从 `event.seq` 往前至多 200 个事件，找最近 `assistant/message`；取其中 `content[*].type==='text'` 的文本拼接，交给 `lib/text.js` 的 `firstParagraph()`；取不到 → `text:null`。
+   - 完成正文：从 `event.seq` 往前至多 200 个事件、遇到本轮 `turn/start` 即停，找最近 `assistant/message`；取其中 `content[*].type==='text'` 的文本拼接，交给 `lib/text.js` 的 `firstParagraph()`；取不到 → `text:null`。
    - 合并：把完成放进 pending 批（记录最新 text/sessionId/count++），`mergeIntervalMs` 后发布一条 `kind:'complete'`（count>1 时带 count）。计时器必须可清理。
-4. 去重：`kind+agentId+callId/toolName` 5 秒内重复同请求忽略；完成按 `sessionId+turn` 去重。
+4. 去重：`kind+agentId+callId/toolName` 5 秒内重复同请求忽略；完成按 `sessionId+turn`（无 turn 时用 `seq`）去重，两者都没有则不去重。
 5. 发布到事件队列：环形缓冲最多 200 条；所有 `/poll` 等待者立即收到；无客户端时也缓存（页面稍后连上可取到，但客户端可自行决定不展示）。
 
 ### 2.6 窗口置前（lib/native-focus.js）
 
 - 仅 win32；按参考实现从 `app.asar.unpacked` 多候选路径加载 koffi 原生 `.node`（`createRequire(join(dirname(modulePath),'index.cjs'))(modulePath)`）。
 - user32：EnumWindows / IsWindowVisible / GetWindowTextW / ShowWindow(SW_RESTORE) / BringWindowToTop / SetForegroundWindow / AttachThreadInput / GetForegroundWindow / GetWindowThreadProcessId / keybd_event / kernel32.GetCurrentThreadId。
-- 窗口匹配：优先用 `process.ppid`（Electron 主进程 PID）匹配窗口 PID；否则标题包含 `DeepSeek Harness`。
+- 窗口匹配：优先用 `process.ppid`（Electron 主进程 PID）匹配窗口 PID；否则仅接受 `Chrome_WidgetWin*` 类且标题包含 `DeepSeek Harness` 的窗口（最后才退到标题含 `DeepSeek`）；仅类名匹配的其他 Chromium 应用窗口永不入选。
 - 加载失败/调用失败返回 `false`，绝不抛错；导出 `focusDesktopWindow(): boolean` 与 `nativeFocusAvailable(): boolean`。
 
 ### 2.7 原生 toast helper（lib/native-toast.js / native-toast.ps1 / native-toast-helper.cs）
 
 - `createNativeToastManager()` 启动 per-Host loopback activation server（随机 token；`/activate` 校验 token、notificationId；点击后发布 `activate`）。
 - `show()` 通过 PowerShell 以 stdin 传 base64 JSON；helper 用 WinRT `ToastNotification` 显示 `<progress>`，同 kind 使用唯一 tag，旧 helper 不立即 kill，允许自然退场。
-- helper 启动时后台 `warm()` 预编译 source-hash 缓存 DLL；首条通知不显示 toast；预热失败不影响正常展示/Web Notification 回退。
+- helper 启动时后台 `warm()` 预编译 source-hash 缓存 DLL；Node 侧先按同一 SHA-256 检查缓存，已存在则不启动 PowerShell；`show()` 遇到进行中的预热会等待（≤8 s）而不是并行再编译；预热失败不影响正常展示/Web Notification 回退。
 - 到达近似 duration 后停止进度更新，短暂缓冲后调用 `Hide()` 收回横幅；`ExpirationTime` 约束通知中心保留，`History.Remove` 不在到期时立即调用。
 
 ## 3. Client 半（lib/client.js）
