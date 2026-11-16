@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.5.2 — 未发布（unreleased，未推送 npm/GitHub）
+## 0.5.2 — 2026-11-17
 
 设置页（lib/client.js）
 - 折叠区直接承载行，不再在带框容器里嵌套第二层卡片；诊断分为状态 / 系统通知 / 运行状态三组，用分隔线区分。
@@ -22,7 +22,7 @@ Host（lib/index.js 等）
 - 原生 toast 预热：Node 侧按与 PowerShell 相同的 SHA-256 检查缓存 DLL，已缓存则不启动 PowerShell；`show()` 遇到进行中的预热会等待（≤8 s）而不是并行再跑一次 csc；非 Windows 不预热。
 - 任务栏角标绘制：按任务栏 DPI 的小图标尺寸（16/20/24/32 px）直接绘制，几何与数字字形像素对齐，蓝环改为双层填充；含义不变（1–3 数字、>3 红点）。
 
-测试：新增 host-events / native-focus / taskbar-badge 测试与 text、native-toast 用例，单测 112 项（110 通过、2 项需真实 profile 跳过）；client smoke 30 项；Host probe（替身 profile）与 probe self-check 通过。C# helper 未在本环境编译验证。
+测试：新增 host-events / native-focus / taskbar-badge 测试与 text、native-toast 用例。发布验证（Windows，Node 24，真实 desktop profile）：单测 112 项全部通过、client smoke 30 项、Host integration probe 与 probe self-check 通过；C# 角标 helper 经 .NET Framework 4.8（C# 5）编译验证通过。
 
 ## 0.5.1 — 2026-11-15
 

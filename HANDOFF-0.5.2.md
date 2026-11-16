@@ -1,6 +1,6 @@
 # dsh-notify-toast 0.5.2 交接说明
 
-> 状态：**未发布**。没有推送到 npm，也没有推送到 GitHub（没有 push、没有 force-push）；只在本地 `main` 上做了一次提交。`market-index.json` 未改动（还没有可以固定的发布 commit）。`AI-DISCLOSURE.md` 保留不变。
+> 状态：**已发布**（2026-11-17 随 0.5.2 合并进主仓库并发布 npm/GitHub）。本文件保留为交接记录；下文「未发布」相关描述为交接时点状态。`AI-DISCLOSURE.md` 保留不变。
 
 ## 一、改了什么、为什么
 

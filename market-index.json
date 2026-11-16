@@ -79,8 +79,8 @@
       },
       "versions": [
         {
-          "version": "0.5.1",
-          "publishTimestamp": 1794747870,
+          "version": "0.5.2",
+          "publishTimestamp": 1794851763,
           "source": {
             "type": "git",
             "url": "https://github.com/game25011/dsh-notify-lite",
