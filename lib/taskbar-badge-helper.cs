@@ -42,6 +42,11 @@ internal class CTaskbarList
 public static class DshTaskbarBadge
 {
     private const int SM_CXSMICON = 49;
+    // 0.5.1 rendered a 20 px glyph on a 32 px bitmap and let the shell
+    // downscale it. 0.58 of the native overlay was 30-40% larger and read
+    // as too wide; 0.46 keeps the old optical size with about 10% extra
+    // height/weight at 16/20/24/32 px.
+    private const float NumeralHeightRatio = 0.46f;
 
     [DllImport("user32.dll")]
     private static extern uint GetDpiForWindow(IntPtr hwnd);
@@ -165,7 +170,7 @@ public static class DshTaskbarBadge
                 {
                     path.AddString(shown.ToString(), family, (int)FontStyle.Regular, 100f, PointF.Empty, format);
                     RectangleF raw = path.GetBounds();
-                    float targetHeight = (float)Math.Round(s * 0.58);
+                    float targetHeight = (float)Math.Round(s * NumeralHeightRatio);
                     float scale = raw.Height > 0 ? targetHeight / raw.Height : 1f;
                     using (var matrix = new Matrix())
                     {

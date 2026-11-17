@@ -11,12 +11,16 @@
 
 > dsh-notify-lite 是一款适用于 Windows 10/11 的非官方 DSH 插件（MIT 协议）。它提供聚焦不打扰的后台提醒，通过 Windows 原生通知提示提问、授权与根会话完成；任务栏未读角标按不同根会话计数，同一会话多次完成算一个，1–3 显示数字，超过 3 显示红点。主要代码由 AI 编程助手生成，人类维护者负责需求、调试、测试与发布。
 
-- 源码/本地包名：`dsh-notify-toast` · 版本：`0.5.2` · 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-lite
-- npm 包：`@game25011/dsh-notify-toast@0.5.2`（scoped 分发；源码包名仍为 `dsh-notify-toast`）
+- 源码/本地包名：`dsh-notify-toast` · 版本：`0.5.3`（未发布）· 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-lite
+- npm 包：`@game25011/dsh-notify-toast@0.5.2`（scoped 分发；源码包名仍为 `dsh-notify-toast`；0.5.3 尚未发布到 npm）
 - 适用：DeepSeek Harness Desktop `0.2.2-rc.3`（Electron 壳，profile `desktop`），Windows 10/11
 - 形态：DSH 官方 bundle（Host + Web Client 两半），通过官方插件管理器安装/卸载
-- 状态：0.5.2 收紧设置页并修复若干 Host 可靠性问题；0.5.1 为二级菜单加入展开/收起动效；0.5.0 重构设置页（分组、低频项折叠、诊断收纳）；0.4.3 修复 DSH 0.2.2 设置页图标重复；0.4.2 更新 DSH 0.2.2-rc.1 兼容声明；0.4.1 修复审批通知漏发；0.4.0 新增任务栏未读角标；0.3.0 原生进度 toast 与 Goal 汇总。
+- 状态：0.5.3（未发布）收窄任务栏数字角标，恢复 0.5.1 的字形宽度；0.5.2 收紧设置页并修复若干 Host 可靠性问题；0.5.1 为二级菜单加入展开/收起动效；0.5.0 重构设置页（分组、低频项折叠、诊断收纳）；0.4.3 修复 DSH 0.2.2 设置页图标重复；0.4.2 更新 DSH 0.2.2-rc.1 兼容声明；0.4.1 修复审批通知漏发；0.4.0 新增任务栏未读角标；0.3.0 原生进度 toast 与 Goal 汇总。
 - 截图：![Windows 原生进度通知](docs/assets/native-toast.png)
+
+## 0.5.3 更新（未发布）
+
+任务栏角标：数字字形的目标高度比例从 0.58 收到 0.46，恢复 0.5.1 的数字宽度，并保留约 10% 的视觉分量；1–3 数字、>3 红点、计数与清除逻辑不变。C# helper 编译、112 项单测与 30 项 client smoke 通过。
 
 ## 0.5.2 更新
 
