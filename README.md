@@ -137,7 +137,7 @@ plugin_manager → install_bundle → target: <插件目录绝对路径>
 本仓库自带 `market-index.json`。在 DSH 的插件市场/发现页添加自定义索引：
 
 ```text
-https://raw.githubusercontent.com/game25011/dsh-notify-lite/7564f13e8638bca2cdf0d7a5ce6dce0a6fc147d7/market-index.json
+https://raw.githubusercontent.com/game25011/dsh-notify-lite/main/market-index.json
 ```
 
 添加后搜索 `dsh-notify-toast` 即可看到本插件，并从市场安装固定版本的 Git 源。
