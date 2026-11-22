@@ -25,6 +25,7 @@ import {
   checkConfigValue,
   mergeConfig,
   normalizeConfig,
+  supportsVolatile,
   unwrapConfigObject,
   unwrapVolatileValue,
   validatePatch,
@@ -291,6 +292,39 @@ test('buildConfigSchema declares every field volatile with the documented defaul
   assert.equal(schema.dict.mergeIntervalMs.state.default, 2500)
 })
 
+test('buildConfigSchema falls back to plain fields when .volatile() is absent', () => {
+  const make = (type, state = {}) => ({
+    type,
+    state,
+    default(value) {
+      return make(type, { ...state, default: value })
+    },
+    min(value) {
+      return make(type, { ...state, min: value })
+    },
+    max(value) {
+      return make(type, { ...state, max: value })
+    },
+    step(value) {
+      return make(type, { ...state, step: value })
+    },
+  })
+  const Schema = {
+    boolean: () => make('boolean'),
+    number: () => make('number'),
+    string: () => make('string'),
+    union: (list) => make('union', { list: [...list] }),
+    object: (dict) => ({ type: 'object', dict }),
+  }
+  assert.equal(supportsVolatile(Schema), false)
+  const schema = buildConfigSchema(Schema)
+  assert.deepEqual(Object.keys(schema.dict), CONFIG_KEYS)
+  for (const key of CONFIG_KEYS) {
+    assert.equal(schema.dict[key].state.volatile, undefined, `${key} stays plain`)
+    assert.equal(schema.dict[key].state.default, DEFAULTS[key], `${key} default`)
+  }
+})
+
 test('buildConfigSchema rejects a module that is not schemastery', () => {
   assert.throws(() => buildConfigSchema(undefined), TypeError)
   assert.throws(() => buildConfigSchema({}), TypeError)
@@ -317,6 +351,7 @@ function resolveProfileSchemastery() {
 }
 
 const RealSchema = resolveProfileSchemastery()
+const RealVolatile = RealSchema === undefined ? false : supportsVolatile(RealSchema)
 
 test('built Config validates defaults through the real profile schemastery', { skip: RealSchema === undefined }, () => {
   const schema = buildConfigSchema(RealSchema)
@@ -325,9 +360,13 @@ test('built Config validates defaults through the real profile schemastery', { s
   const value = result.value
   assert.equal(typeof value, 'object')
   for (const key of CONFIG_KEYS) {
-    assert.equal(typeof value[key], 'object', `${key} must be a volatile reference`)
-    assert.equal(typeof value[key].get, 'function', `${key}.get()`)
-    assert.equal(value[key].get(), DEFAULTS[key], `${key} default through schemastery`)
+    if (RealVolatile) {
+      assert.equal(typeof value[key], 'object', `${key} must be a volatile reference`)
+      assert.equal(typeof value[key].get, 'function', `${key}.get()`)
+      assert.equal(value[key].get(), DEFAULTS[key], `${key} default through schemastery`)
+    } else {
+      assert.equal(value[key], DEFAULTS[key], `${key} default through schemastery`)
+    }
   }
 })
 

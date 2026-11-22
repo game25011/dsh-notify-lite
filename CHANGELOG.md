@@ -5,7 +5,8 @@
 - 全面更名：插件清单 id `dsh.notify-lite`、Host 行 id、RPC 前缀 `/dsh-notify-lite`、settings 命名空间、原生 helper 缓存目录（`%LOCALAPPDATA%\dsh-notify-lite\native-cache`）与 npm 包名统一为 `dsh-notify-lite`。
 - npm 包名从 `@game25011/dsh-notify-toast` 改为未占用的 `dsh-notify-lite`：源码包名与发布名一致，发布不再需要临时改名。
 - 升级须知：插件 id 变更，需先移除旧 bundle 再安装 0.6.0；旧 settings 不迁移。
-- 待办：DSH 侧 `@deepseek-ai/schemastery` 3.18.2 无 `.volatile()`，`buildConfigSchema` 当前解析不出 Config（host probe 报 `Config: unresolved`），需适配后再发布。
+- 修复：`@deepseek-ai/schemastery` 3.18.x 移除了 `.volatile()`，`buildConfigSchema` 改为按能力构建（有则用 volatile 引用，无则用普通字段），读取端保持两种形态兼容；配置解析失败不再被当成「路径不存在」静默跳过，失败原因写入 health 诊断（`configSource` / `configMode`）。
+- 验证：113 项单测、30 项 client smoke、host integration probe 通过（配置已解析；当前 DSH 的 schemastery 3.18.2 走 `mode=plain`）。
 
 ## 0.5.3 — 2026-11-17
 

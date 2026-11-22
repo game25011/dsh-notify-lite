@@ -94,7 +94,9 @@ export function apply(ctx, config) { ... }  // 注册事件/路由/清理；无�
 }
 ```
 
-### 2.4 Config（schemastery，全部 `.volatile()`）
+### 2.4 Config（schemastery）
+
+> 字段在加载到的 schemastery 提供 `.volatile()` 时全部标为 volatile（旧版 DSH），否则退化为普通字段（3.18.x 起的副本已移除该方法）。两种模式的默认值与校验规则相同，读取端通过 `unwrapVolatileValue` 兼容引用与普通值。`Config: resolved | source | mode`（`volatile` / `plain` / `none`）出现在 RPC health 的诊断里。
 
 ```js
 {
