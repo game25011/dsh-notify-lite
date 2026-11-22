@@ -43,7 +43,7 @@
   },
   "plugins": [
     {
-      "name": "dsh-notify-toast",
+      "name": "dsh-notify-lite",
       "title": {
         "en": "dsh-notify-lite",
         "zh": "dsh-notify-lite"
@@ -74,17 +74,17 @@
           "native"
         ],
         "sortKeys": {
-          "published": 1794030772
+          "published": 1795332555
         }
       },
       "versions": [
         {
-          "version": "0.5.3",
-          "publishTimestamp": 1794904461,
+          "version": "0.6.0",
+          "publishTimestamp": 1795332555,
           "source": {
             "type": "git",
             "url": "https://github.com/game25011/dsh-notify-lite",
-            "commit": "6f2a7c915a206199ce85548750593865a999027c"
+            "commit": "19a02b4b02fd223c2a68821dead8968d34469d4e"
           },
           "engines": {
             "dsh": ">=0.2.1-rc.2 <0.2.2-0 || >=0.2.2-rc.0 <0.3.0"
