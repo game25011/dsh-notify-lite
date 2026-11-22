@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a reproducible problem with dsh-notify-toast
+description: Report a reproducible problem with dsh-notify-lite
 title: "[Bug]: "
 body:
   - type: markdown

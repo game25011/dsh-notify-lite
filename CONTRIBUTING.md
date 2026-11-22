@@ -1,6 +1,6 @@
-# Contributing to dsh-notify-toast
+# Contributing to dsh-notify-lite
 
-Thanks for your interest in improving `dsh-notify-toast`. This is a small, dependency-free DSH plugin, and focused contributions are welcome.
+Thanks for your interest in improving `dsh-notify-lite`. This is a small, dependency-free DSH plugin, and focused contributions are welcome.
 
 ## Before you start
 

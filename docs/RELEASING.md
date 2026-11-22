@@ -1,4 +1,4 @@
-# dsh-notify-toast 发布手册
+# dsh-notify-lite 发布手册
 
 > 适用版本：`0.3.0` 起的历史发布手册；当前版本见 `package.json`。面向维护者，所有命令默认在仓库根目录执行。
 > 本项目的 CI 只做检查：**不会自动发布**。打 tag、GitHub Release、`npm publish` 都是人工步骤。
@@ -29,7 +29,7 @@
     npm login --registry https://registry.npmjs.org
     npm whoami --registry https://registry.npmjs.org
     npm publish --access public --registry https://registry.npmjs.org
-    npm view dsh-notify-toast version --registry https://registry.npmjs.org
+    npm view dsh-notify-lite version --registry https://registry.npmjs.org
 
 不建议依赖全局 `npm config set registry ...` 的临时切换；如果切换过，发布后要改回并再次确认。所有发布命令带上 `--registry https://registry.npmjs.org` 最稳妥。
 
@@ -67,11 +67,11 @@
 
 用于确认测试不依赖工作区残留。零依赖、无需 `npm install`。任选 Git Bash / WSL / macOS / Linux 执行：
 
-    rm -rf /tmp/dsh-notify-toast-preflight
-    mkdir -p /tmp/dsh-notify-toast-preflight
-    tar -czf /tmp/dsh-notify-toast-preflight.tar.gz --exclude='./.git' --exclude='./release' --exclude='*.tgz' .
-    tar -xzf /tmp/dsh-notify-toast-preflight.tar.gz -C /tmp/dsh-notify-toast-preflight
-    cd /tmp/dsh-notify-toast-preflight
+    rm -rf /tmp/dsh-notify-lite-preflight
+    mkdir -p /tmp/dsh-notify-lite-preflight
+    tar -czf /tmp/dsh-notify-lite-preflight.tar.gz --exclude='./.git' --exclude='./release' --exclude='*.tgz' .
+    tar -xzf /tmp/dsh-notify-lite-preflight.tar.gz -C /tmp/dsh-notify-lite-preflight
+    cd /tmp/dsh-notify-lite-preflight
     npm test
     npm run smoke
     node scripts/probe-rpc.mjs --self-check
@@ -100,7 +100,7 @@ Windows 建议在 Git Bash 中执行；`rm -rf` 前先确认目标就是上述�
     git status --short
     git config --local user.name "<github-owner>"
     git config --local user.email "<maintainer-email>"
-    git commit -m "chore: initial public release of dsh-notify-toast 0.3.0"
+    git commit -m "chore: initial public release of dsh-notify-lite 0.3.0"
 
 - 首次 commit 前用 `git status --short` 确认没有把 `*.tgz`、`release/`、`node_modules/`、日志、`.npmrc` 或截图原图加入暂存区（仓库的 `.gitignore` 已排除常见构建产物）。
 - **git 邮箱会公开**：commit 的 author/committer 邮箱会出现在 GitHub 历史中。建议使用 GitHub noreply 邮箱（形如 `12345678+<github-owner>@users.noreply.github.com`，其中数字是 GitHub 用户 ID），或使用愿意公开的维护者邮箱；不要把私人邮箱写进仓库文件。
@@ -131,7 +131,7 @@ Windows 建议在 Git Bash 中执行；`rm -rf` 前先确认目标就是上述�
 
 tag 指向已验证的发布 commit：
 
-    git tag -a v0.3.0 -m "dsh-notify-toast 0.3.0"
+    git tag -a v0.3.0 -m "dsh-notify-lite 0.3.0"
     git show --stat v0.3.0
     git push origin v0.3.0
 
@@ -146,15 +146,15 @@ tag 指向已验证的发布 commit：
 ## 6. 创建 GitHub Release（不会自动发布到 npm）
 
 1. 打开仓库 → Releases → Draft a new release。
-2. Tag 选择 `v0.3.0`，标题为 `dsh-notify-toast 0.3.0`。
+2. Tag 选择 `v0.3.0`，标题为 `dsh-notify-lite 0.3.0`。
 3. 发布说明从 `CHANGELOG.md` 的 `0.3.0 — 2026-10-18` 段落生成；把「未发布（0.3.0 发布前修正）」中的用户可见项并入 0.3.0 说明，不要保留「未发布」措辞。以 CHANGELOG 为唯一来源，不改代码。
-4. 可选附件：在仓库根目录执行 `npm pack`，把生成的 `dsh-notify-toast-0.3.0.tgz` 上传到 Release。0.3.0 的 DSH 插件管理器安装仍以 tgz / 本地目录 link 为主，附上 tgz 便于用户直接安装。
+4. 可选附件：在仓库根目录执行 `npm pack`，把生成的 `dsh-notify-lite-0.3.0.tgz` 上传到 Release。0.3.0 的 DSH 插件管理器安装仍以 tgz / 本地目录 link 为主，附上 tgz 便于用户直接安装。
 5. 点击 Publish release。
 
 - GitHub Release 只是版本节点和附件，**不会触发 npm 发布**；npm 仍需按第 7 节手动 publish。
 - 可选 `gh` 命令（先把发布说明保存为 `release-notes.md`）：
 
-      gh release create v0.3.0 dsh-notify-toast-0.3.0.tgz --title "dsh-notify-toast 0.3.0" --notes-file release-notes.md
+      gh release create v0.3.0 dsh-notify-lite-0.3.0.tgz --title "dsh-notify-lite 0.3.0" --notes-file release-notes.md
 
 - 不要为了「自动发布」给 CI 增加 token 或 publish 步骤；本项目的发布是人工、可审计的。
 
@@ -162,7 +162,7 @@ tag 指向已验证的发布 commit：
 
 ### 7.1 发布前最后确认
 
-    npm view dsh-notify-toast version --registry https://registry.npmjs.org
+    npm view dsh-notify-lite version --registry https://registry.npmjs.org
     npm whoami --registry https://registry.npmjs.org
 
 未发布时 `npm view` 返回 404（预期）；如果返回了版本号，说明包名已被占用或该版本已发布，先停下来，见 9.3。
@@ -180,32 +180,32 @@ tag 指向已验证的发布 commit：
 
 ### 7.3 发布后立即校验
 
-    npm view dsh-notify-toast version --registry https://registry.npmjs.org
-    npm view dsh-notify-toast dist.integrity dist.tarball --registry https://registry.npmjs.org
+    npm view dsh-notify-lite version --registry https://registry.npmjs.org
+    npm view dsh-notify-lite dist.integrity dist.tarball --registry https://registry.npmjs.org
 
 `version` 应为 `0.3.0`。
 
 ### 7.4 从 registry 重新下载并复验
 
-    rm -rf /tmp/dsh-notify-toast-registry-check
-    mkdir -p /tmp/dsh-notify-toast-registry-check
-    cd /tmp/dsh-notify-toast-registry-check
-    npm pack dsh-notify-toast@0.3.0 --registry https://registry.npmjs.org
-    tar -xzf dsh-notify-toast-0.3.0.tgz
+    rm -rf /tmp/dsh-notify-lite-registry-check
+    mkdir -p /tmp/dsh-notify-lite-registry-check
+    cd /tmp/dsh-notify-lite-registry-check
+    npm pack dsh-notify-lite@0.3.0 --registry https://registry.npmjs.org
+    tar -xzf dsh-notify-lite-0.3.0.tgz
     node -e "const p=require('./package/package.json'); console.log(p.name, p.version, p.license, p.type)"
     node --check package/lib/index.js
     node --check package/lib/client.js
-    tar -tzf dsh-notify-toast-0.3.0.tgz
-    tar -tzf dsh-notify-toast-0.3.0.tgz | grep -vc '/$'
+    tar -tzf dsh-notify-lite-0.3.0.tgz
+    tar -tzf dsh-notify-lite-0.3.0.tgz | grep -vc '/$'
 
-预期：`package.json` 输出 `dsh-notify-toast 0.3.0 MIT module`；最后一条命令输出 `27`（tar 列表去掉目录条目后的文件数；不包含 `test/` 与 `scripts/`）。
+预期：`package.json` 输出 `dsh-notify-lite 0.3.0 MIT module`；最后一条命令输出 `27`（tar 列表去掉目录条目后的文件数；不包含 `test/` 与 `scripts/`）。
 
 ## 8. 发布后验证
 
-- npm 包页面 `https://www.npmjs.com/package/dsh-notify-toast` 显示 0.3.0、README、LICENSE 与版本列表。
+- npm 包页面 `https://www.npmjs.com/package/dsh-notify-lite` 显示 0.3.0、README、LICENSE 与版本列表。
 - GitHub Release `https://github.com/<github-owner>/<repo>/releases/tag/v0.3.0` 可访问，附件（可选）可下载。
 - CI `https://github.com/<github-owner>/<repo>/actions` 最近一次运行绿色；矩阵为 windows-latest / ubuntu-latest × Node 22 / 24，共 4 个组合。
-- DSH 插件管理器：0.3.0 仍按 tgz 交付——用 `plugin_manager` 的 `install_bundle` 指向 Release 附件 `dsh-notify-toast-0.3.0.tgz`（或本地 `npm pack` 产物）；首次安装/升级后重启 DSH。**从 npm registry 直接安装的体验尚未在 0.3.0 上验证，不要写入安装文档宣称已验证。**
+- DSH 插件管理器：0.3.0 仍按 tgz 交付——用 `plugin_manager` 的 `install_bundle` 指向 Release 附件 `dsh-notify-lite-0.3.0.tgz`（或本地 `npm pack` 产物）；首次安装/升级后重启 DSH。**从 npm registry 直接安装的体验尚未在 0.3.0 上验证，不要写入安装文档宣称已验证。**
 - 回填文档：README、README.en.md、SECURITY 已写入本仓库真实地址 `https://github.com/game25011/dsh-notify-lite`；Code of Conduct 使用 SECURITY.md 的私密渠道。发布前只需确认 README/README.en.md 的截图已补，且本手册示例中的 `<github-owner>` / `<repo>` / `<maintainer-email>` 已按实际替换；如果这些改动影响已发布的 tgz，按 9.1 发 patch，而不是改已发布的 0.3.0。
 
 ## 9. 回滚与撤销
@@ -221,7 +221,7 @@ npm 的撤销政策要点（以 npm 官方文档为准）：
 
 推荐流程（内容有问题但包仍可用）：
 
-    npm deprecate dsh-notify-toast@0.3.0 "Deprecated: use a newer release" --registry https://registry.npmjs.org
+    npm deprecate dsh-notify-lite@0.3.0 "Deprecated: use a newer release" --registry https://registry.npmjs.org
 
 修复问题、提升版本号后发布 patch：
 
@@ -229,14 +229,14 @@ npm 的撤销政策要点（以 npm 官方文档为准）：
 
 只有在刚发布且确认无人依赖时才考虑单版本撤销：
 
-    npm unpublish dsh-notify-toast@0.3.0 --registry https://registry.npmjs.org --force
+    npm unpublish dsh-notify-lite@0.3.0 --registry https://registry.npmjs.org --force
 
 整包撤销（危险，仅 72 小时内）：
 
-    npm unpublish dsh-notify-toast --force --registry https://registry.npmjs.org
+    npm unpublish dsh-notify-lite --force --registry https://registry.npmjs.org
 
 - 撤销/弃用不会影响本地 tgz 与 GitHub Release；需要同步更新 Release 说明和文档。
-- `npm deprecate` 后可用 `npm view dsh-notify-toast deprecated --registry https://registry.npmjs.org` 核对弃用说明。
+- `npm deprecate` 后可用 `npm view dsh-notify-lite deprecated --registry https://registry.npmjs.org` 核对弃用说明。
 
 ### 9.2 git tag 与 GitHub Release
 
@@ -244,7 +244,7 @@ npm 的撤销政策要点（以 npm 官方文档为准）：
 
     git tag -d v0.3.0
     git push origin :refs/tags/v0.3.0
-    git tag -a v0.3.0 -m "dsh-notify-toast 0.3.0"
+    git tag -a v0.3.0 -m "dsh-notify-lite 0.3.0"
     git push origin v0.3.0
 
 - **已经公开或被引用的 tag 不要 force push 重写**；正确做法是发布新版本、新 tag。tag 一旦被用户下载，删除会让历史不可复现。
@@ -253,9 +253,9 @@ npm 的撤销政策要点（以 npm 官方文档为准）：
 
 ### 9.3 包名被占用时的备选
 
-如果 `dsh-notify-toast` 已被他人占用（`npm view` 返回了版本），不要抢注、覆盖或发布到镜像：
+如果 `dsh-notify-lite` 已被他人占用（`npm view` 返回了版本），不要抢注、覆盖或发布到镜像：
 
-1. 首选改为 scope 包：`@<github-owner>/dsh-notify-toast`；
+1. 首选改为 scope 包：`@<github-owner>/dsh-notify-lite`；
 2. 需要同步修改 `package.json` 的 `name` 以及代码、文档、DSH 安装说明中的包名——**本手册不负责改代码**，需另开变更并完整回归；
 3. scope 包发布同样使用 `npm publish --access public --registry https://registry.npmjs.org`（scope 包默认 restricted，必须显式 public）；
 4. 改名前先跑 `npm test`、`npm run smoke`、`npm pack --dry-run`，并确认 DSH 插件管理器能安装 scope 包；
@@ -266,7 +266,7 @@ npm 的撤销政策要点（以 npm 官方文档为准）：
 | 占位符 | 出现位置（需人工替换） | 替换为 |
 |---|---|---|
 | `<github-owner>` | 本手册的 GitHub URL / `gh repo create` / `git remote` 示例 | GitHub 用户名或组织名 |
-| `<repo>` | 本手册的 GitHub URL / `gh repo create` 示例 | 仓库名（建议 `dsh-notify-toast`） |
+| `<repo>` | 本手册的 GitHub URL / `gh repo create` 示例 | 仓库名（建议 `dsh-notify-lite`） |
 | `<maintainer-email>` | 本手册的 git 身份示例 | 公开维护者邮箱，建议 GitHub noreply 邮箱 |
 | `<github-user-id>` | 采用 noreply 邮箱时的 `12345678+<github-owner>@users.noreply.github.com` 前缀 | GitHub 数字用户 ID |
 | 截图 | README / README.en.md 的截图待补说明 | 一张真实 Windows 右下角 toast 截图（PNG，不伪造） |

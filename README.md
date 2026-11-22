@@ -11,12 +11,16 @@
 
 > dsh-notify-lite 是一款适用于 Windows 10/11 的非官方 DSH 插件（MIT 协议）。它提供聚焦不打扰的后台提醒，通过 Windows 原生通知提示提问、授权与根会话完成；任务栏未读角标按不同根会话计数，同一会话多次完成算一个，1–3 显示数字，超过 3 显示红点。主要代码由 AI 编程助手生成，人类维护者负责需求、调试、测试与发布。
 
-- 源码/本地包名：`dsh-notify-toast` · 版本：`0.5.3` · 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-lite
-- npm 包：`@game25011/dsh-notify-toast@0.5.3`（scoped 分发；源码包名仍为 `dsh-notify-toast`）
+- 源码/本地包名：`dsh-notify-lite` · 版本：`0.6.0` · 许可：MIT · 仓库：https://github.com/game25011/dsh-notify-lite
+- npm 包：`dsh-notify-lite@0.6.0`（未 scoped，与源码包名一致）
 - 适用：DeepSeek Harness Desktop `0.2.2-rc.3`（Electron 壳，profile `desktop`），Windows 10/11
 - 形态：DSH 官方 bundle（Host + Web Client 两半），通过官方插件管理器安装/卸载
-- 状态：0.5.3 收窄任务栏数字角标，恢复 0.5.1 的字形宽度；0.5.2 收紧设置页并修复若干 Host 可靠性问题；0.5.1 为二级菜单加入展开/收起动效；0.5.0 重构设置页（分组、低频项折叠、诊断收纳）；0.4.3 修复 DSH 0.2.2 设置页图标重复；0.4.2 更新 DSH 0.2.2-rc.1 兼容声明；0.4.1 修复审批通知漏发；0.4.0 新增任务栏未读角标；0.3.0 原生进度 toast 与 Goal 汇总。
+- 状态：0.6.0 全面更名为 `dsh-notify-lite`，npm 包名同步改用未占用名；0.5.3 收窄任务栏数字角标，恢复 0.5.1 的字形宽度；0.5.2 收紧设置页并修复若干 Host 可靠性问题；0.5.1 为二级菜单加入展开/收起动效；0.5.0 重构设置页（分组、低频项折叠、诊断收纳）；0.4.3 修复 DSH 0.2.2 设置页图标重复；0.4.2 更新 DSH 0.2.2-rc.1 兼容声明；0.4.1 修复审批通知漏发；0.4.0 新增任务栏未读角标；0.3.0 原生进度 toast 与 Goal 汇总。
 - 截图：![Windows 原生进度通知](docs/assets/native-toast.png)
+
+## 0.6.0 更新
+
+全面更名为 `dsh-notify-lite`：插件清单 id（`dsh.notify-lite`）、Host 行 id、RPC 前缀、settings 命名空间、原生 helper 缓存目录与 npm 包名统一。npm 上的 `dsh-notify-toast` 属于另一位作者，本次换到未被占用的名字。从 0.5.x 升级需先移除旧版再装新版，旧设置不迁移。
 
 ## 0.5.3 更新
 
@@ -66,7 +70,7 @@ v0.4.2 是元数据与兼容声明补丁，未变更通知核心逻辑。针对 
 
 本项目的主要代码（Host、Web Client、PowerShell/C# 原生 helper 及多数测试/文档）由 AI 编程助手生成；人类维护者负责需求、调试、测试、发布和维护。AI 生成内容可能存在错误，欢迎提交 issue 或 pull request。本项目采用 MIT License，AI 工具不是作者、版权持有者或责任主体，本说明不构成法律意见。详见 [AI-DISCLOSURE.md](AI-DISCLOSURE.md)。
 
-> 命名说明：中文显示名仅用于界面展示；npm 包名、目录、Host 行 id、settings 命名空间与 RPC 前缀保留 ASCII `dsh-notify-toast`；插件清单公共 id 为 `dsh.notify-toast`。
+> 命名说明：中文显示名仅用于界面展示；npm 包名、目录、Host 行 id、settings 命名空间与 RPC 前缀保留 ASCII `dsh-notify-lite`；插件清单公共 id 为 `dsh.notify-lite`。
 
 ---
 
@@ -102,25 +106,25 @@ v0.4.2 是元数据与兼容声明补丁，未变更通知核心逻辑。针对 
 
 > 本插件只通过 **官方插件管理器** 或 GitHub Release 安装；不要手改 profile 的 `package.json` 或 `cordis.patch.yml`。
 >
-> npm 包：`@game25011/dsh-notify-toast@0.5.3`；可用 `npm pack @game25011/dsh-notify-toast` 获取 tgz，再按插件管理器安装。
+> npm 包：`dsh-notify-lite@0.6.0`；可用 `npm pack dsh-notify-lite` 获取 tgz，再按插件管理器安装。
 
 > 插件清单说明：`dsh-plugin.json` 只声明 Host facet（`facets.host`）；Web Client 半由 `package.json` 的 `dsh.client` 声明（同类第三方插件也采用该结构），因此未声明 `facets.client`。DSH 0.2.2-rc.3 的官方插件加载以 `package.json` 的 `dsh.bundle` / `dsh.client` 为准。
 
 ### 方式 0：npm 包（可选）
 
 ```text
-npm pack @game25011/dsh-notify-toast --registry=https://registry.npmjs.org/
+npm pack dsh-notify-lite --registry=https://registry.npmjs.org/
 ```
 
 然后按下面的 tgz / 插件管理器方式安装；DSH Desktop 仍推荐应用内插件管理器。
 
 ### 方式 A：应用内插件管理器（推荐）
 
-1. 把交付的 `dsh-notify-toast-0.5.3.tgz` 放到本机任意目录（路径不要含空格）。
+1. 把交付的 `dsh-notify-lite-0.6.0.tgz` 放到本机任意目录（路径不要含空格）。
 2. 在 DSH 里让 Agent 用官方插件管理器安装，或使用插件管理界面：
    - Agent 工具：`plugin_manager` → `action: install_bundle`，`target: <tgz 绝对路径>`
    - 命令行：**仅适用于自管 profile（web/headless）**；官方 Desktop 的 desktop profile 由 Electron 应用的插件管理器管理，请用上面的界面或 Agent 方式。
-3. 安装完成后在 设置 → 插件 的列表里确认 `dsh-notify-toast` 已启用。
+3. 安装完成后在 设置 → 插件 的列表里确认 `dsh-notify-lite` 已启用。
    - **首次安装/升级后需要重启一次 DSH**：官方插件管理器可热插入 Host 行，但已加载的 Host JavaScript 模块要重启才会换成新代码（客户端 bundle 会热更新）。本插件不会自行重启应用。
 4. 打开 设置 →「通知」，点「发送测试通知」验证；展开「诊断与状态」可查看 Host 连接、transport、设置持久化与最近提醒计数。
 
@@ -140,7 +144,7 @@ plugin_manager → install_bundle → target: <插件目录绝对路径>
 https://raw.githubusercontent.com/game25011/dsh-notify-lite/main/market-index.json
 ```
 
-添加后搜索 `dsh-notify-toast` 即可看到本插件，并从市场安装固定版本的 Git 源。
+添加后搜索 `dsh-notify-lite` 即可看到本插件，并从市场安装固定版本的 Git 源。
 这是**自托管索引**；DSH 官方默认索引不会自动收录本插件，其他用户需要添加同一索引或由官方目录收录。
 
 ### 升级
@@ -150,8 +154,8 @@ https://raw.githubusercontent.com/game25011/dsh-notify-lite/main/market-index.js
 
 ### 卸载
 
-- 应用内：插件管理界面禁用/移除 `dsh-notify-toast`；
-- Agent 工具：`plugin_manager` → `action: remove_bundle`，`target: dsh-notify-toast`；
+- 应用内：插件管理界面禁用/移除 `dsh-notify-lite`；
+- Agent 工具：`plugin_manager` → `action: remove_bundle`，`target: dsh-notify-lite`；
 - 卸载后：Host 路由/事件监听/计时器随插件 fiber 释放，客户端 bundle 不再加载；设置页条目消失。
   已写入 profile patch 的配置项会随插件移除而不再生效（不会留下后台进程或临时文件）。
 
@@ -159,7 +163,7 @@ https://raw.githubusercontent.com/game25011/dsh-notify-lite/main/market-index.js
 
 ## 配置
 
-设置位置：**设置 →「通知」**（`settings.section`，id `dsh-notify-toast`）。
+设置位置：**设置 →「通知」**（`settings.section`，id `dsh-notify-lite`）。
 
 | 设置 | 范围/选项 | 默认 | 说明 |
 |---|---|---|---|
@@ -193,7 +197,7 @@ user-questions/request ─────┼─ 清洗/截断/合并 ──┐    �
 session/event turn/end ─────┘                    │    ├─ native toast RPC / Web Notification 回退 + 点击回窗
                                                  ▼    ├─ Web Audio 合成提示音 + 内嵌 CC0「弹一下」音效
                                  事件环形缓冲 + 长轮询 ┘
-Host 浏览器路由 /dsh-notify-toast（官方 RPC 信封 + 同源栅栏）
+Host 浏览器路由 /dsh-notify-lite（官方 RPC 信封 + 同源栅栏）
   config / save / poll / health / test / focus / taskbar-badge
 Host: native-toast.ps1 → WinRT Toast；taskbar-badge EXE → ITaskbarList3
 Host: ctx.settings（volatile Config）← save
@@ -201,7 +205,7 @@ Host: koffi user32 SetForegroundWindow ← focus
 ```
 
 - **Host 检测**：直接监听 DSH 的权威事件（审批、提问、`turn/end`），只读会话日志提取正文，不调用模型、不访问外部网络。
-- **传输**：走 `/dsh-notify-toast` 前缀长轮询。优先使用官方 `connection.rpc.handle`；在 DSH 0.2.1-rc.2 上该 API 有 bug
+- **传输**：走 `/dsh-notify-lite` 前缀长轮询。优先使用官方 `connection.rpc.handle`；在 DSH 0.2.1-rc.2 上该 API 有 bug
   （内部读 `webServer` 抛 `cannot get property "webServer" without inject`），插件自动回退为同路径 `webServer` 路由，
   并在入口调用官方 `connection.requestRejection` 复用 Host/Origin 同源栅栏 + 浏览器签名 cookie 认证；
   请求/响应用官方一元 RPC 信封，所以客户端 `connection.rpc.call` 代码不变。设置页「Host 连接 / transport」可看到当前链路。
@@ -221,7 +225,7 @@ Host: koffi user32 SetForegroundWindow ← focus
 - **客户端** 是约 159 KB 的 Web bundle；空闲时只有一条 25 秒长轮询和 5 秒一次的 localStorage leader 心跳。
 - **Windows toast** 由一次性 PowerShell/C# helper 调 WinRT 创建；一个 toast 对应一个 helper，toast 结束后退出，同时最多 8 个。
 - **任务栏角标** 优先使用首次编译并缓存的小型独立 C# EXE，直接调用 \`ITaskbarList3::SetOverlayIcon\`；热路径实测约 55–85 ms、约 14 MB 瞬时内存。首次使用需要编译，之后命中缓存；编译或 EXE 不可用时回退 PowerShell helper。
-- **缓存** 位于 \`%LOCALAPPDATA%\\dsh-notify-toast\\native-cache\`；任务栏 helper 缓存只保留最近 8 个，避免旧 hash 文件无限积累。
+- **缓存** 位于 \`%LOCALAPPDATA%\\dsh-notify-lite\\native-cache\`；任务栏 helper 缓存只保留最近 8 个，避免旧 hash 文件无限积累。
 - 不访问外部网络、不调用模型、不采集；点击回调只使用本机 loopback。
 
 ### 隐私
@@ -258,7 +262,7 @@ Host: koffi user32 SetForegroundWindow ← focus
 9. 合并只针对「完成」；提问/授权不合并（需要你尽快处理）。
 10. **Windows 原生 toast 的退场动画和横幅停留时间由 Windows 控制**（Windows 设置/专注助手）；「通知自动移除时间（近似）」控制进度更新停止与通知中心保留窗口，不保证横幅精确停留 N 秒。到期后插件会短暂缓冲再调用 `Hide()` 收回横幅；`Hide()` 的视觉过渡仍由 Windows 决定。
 11. 原生进度通知的点击回会话依赖 C# helper 的本地激活回调；回调失败时可能只关闭通知、无法定位会话。提示条不再使用 `dsh://open` 协议唤起，避免点击时另起 DSH 实例/会话。
-12. 原生 helper 首次运行会在 `%LOCALAPPDATA%\dsh-notify-toast\native-cache` 编译/缓存一个 C# DLL；编译失败或 PowerShell/C# 不可用时自动回退兼容通知。
+12. 原生 helper 首次运行会在 `%LOCALAPPDATA%\dsh-notify-lite\native-cache` 编译/缓存一个 C# DLL；编译失败或 PowerShell/C# 不可用时自动回退兼容通知。
 13. 插件不修改 DSH 核心；DSH 升级若改动上述事件/RPC/settings 契约，插件可能需要同步升级。
 14. DSH 0.2.1-rc.2 的官方 `connection.rpc.handle` 自身有 bug（`cannot get property "webServer" without inject`），
     插件已自动回退为同路径 + `connection.requestRejection` 的官方栅栏路由；这不改变客户端行为，但 DSH 修复该 API 后插件会优先走官方 channel。
@@ -298,7 +302,7 @@ npm pack                      生成交付用 tgz
   - `lib/client.js` Web 客户端半（焦点、toast、声音、设置页、长轮询）
   - `locale/zh.json`、`locale/en.json` 插件市场/设置页显示元数据
   - `scripts/client-smoke.mjs`、`scripts/probe-rpc.mjs` 冒烟/探针
-  - `dsh-plugin.json` 插件清单（Host facet，公共 id `dsh.notify-toast`）；`package.json` 的 `dsh.client` 声明 Web Client 半；`cordis.patch.yml` 为 bundle patch
+  - `dsh-plugin.json` 插件清单（Host facet，公共 id `dsh.notify-lite`）；`package.json` 的 `dsh.client` 声明 Web Client 半；`cordis.patch.yml` 为 bundle patch
   - `docs/PLAN.md` 历史开工方案（不进入 npm 包）；`docs/INTERFACE.md` Host/Client 契约；`docs/TEST-REPORT.md` 验收记录；`docs/RELEASING.md` 发布手册
 
 ---

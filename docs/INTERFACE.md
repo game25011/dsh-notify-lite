@@ -1,4 +1,4 @@
-# dsh-notify-toast — Host/Client 接口契约（开发用）
+# dsh-notify-lite — Host/Client 接口契约（开发用）
 
 > 实现时严格遵守本契约；改动契约先改本文件并在提交说明里写明。
 > 单位：字符数按 Unicode 码点（`Array.from(text).length`）计。
@@ -6,22 +6,22 @@
 ## 0. 常量
 
 ```
-PKG_ID    = 'dsh-notify-toast'      // package.json name / 客户端 ModuleLoader id / 行 id / settings ns
-VERSION   = '0.5.3'
-RPC_CHANNEL = '/dsh-notify-toast'   // 官方 Connection RPC 频道（Host rpc.handle）
-LOCALE_NS = 'dsh-notify-toast'      // 客户端 locale 命名空间
+PKG_ID    = 'dsh-notify-lite'      // package.json name / 客户端 ModuleLoader id / 行 id / settings ns
+VERSION   = '0.6.0'
+RPC_CHANNEL = '/dsh-notify-lite'   // 官方 Connection RPC 频道（Host rpc.handle）
+LOCALE_NS = 'dsh-notify-lite'      // 客户端 locale 命名空间
 ```
 
 传输层结论（已核实 DSH 安装包内 `@deepseek-ai/dsh-client-connection` 源码与运行日志）：
 
-- 首选官方 `ctx.connection.rpc.handle('/dsh-notify-toast', handler)`：由 Connection 包负责注册前缀路由、Host/Origin 栅栏与签名 cookie 认证。
+- 首选官方 `ctx.connection.rpc.handle('/dsh-notify-lite', handler)`：由 Connection 包负责注册前缀路由、Host/Origin 栅栏与签名 cookie 认证。
 - **DSH 0.2.1-rc.2 实测该 API 有 bug**：其内部 `HostConnectionService.rpc.handle` 在自己的 fiber 上读取 `webServer`，抛
   `cannot get property "webServer" without inject`（`dsh-client-connection/lib/index.js:871`），路由未注册。
-- 因此插件实现**同路径回退路由**：用 `ctx.webServer.register({kind:'prefix', path:'/dsh-notify-toast', handler})` 注册同样的前缀路径，
+- 因此插件实现**同路径回退路由**：用 `ctx.webServer.register({kind:'prefix', path:'/dsh-notify-lite', handler})` 注册同样的前缀路径，
   handler 内先调 `ctx.connection.requestRejection(req)` 复用官方 Host/Origin + 浏览器签名 cookie 栅栏，再按官方一元 RPC 信封
   `{type:'client-request', rpcId, method, payload}` → `{type:'server-response', rpcId, result}` 应答。
   这条回退链路与官方客户端 `connection.rpc.call` 完全兼容，客户端代码不变。
-- Client：`ctx.connection.rpc.call('/dsh-notify-toast', endpoint, payload, signal)`（相对 URL，经页面同源/`dsh-app://app` 代理到 Host），
+- Client：`ctx.connection.rpc.call('/dsh-notify-lite', endpoint, payload, signal)`（相对 URL，经页面同源/`dsh-app://app` 代理到 Host），
   返回 `{ok:true,value} | {ok:false,error}`（transport 信封）→ Host 业务值再见一层 `{ok:true,...}` / `{ok:false,error}`。
 - 桌面壳与普通浏览器页面都适用，无需知道端口/令牌，也无需 EventSource。
 
@@ -42,7 +42,7 @@ LOCALE_NS = 'dsh-notify-toast'      // 客户端 locale 命名空间
 ### 2.1 导出
 
 ```js
-export const name = 'dsh-notify-toast'
+export const name = 'dsh-notify-lite'
 export const inject = []                    // 全部用 ctx.inject([...]) 可选注入
 export const Config = <schemastery object>  // 见 §2.4；解析失败时导出 undefined
 export function apply(ctx, config) { ... }  // 注册事件/路由/清理；无全局副作用
@@ -56,7 +56,7 @@ export function apply(ctx, config) { ... }  // 注册事件/路由/清理；无�
 
 ### 2.3 浏览器传输（官方 channel 优先，同路径 webServer 路由回退）
 
-- 路径：`/dsh-notify-toast`（前缀）。官方 `connection.rpc.handle` 可用时由它注册并认证；0.2.1-rc.2 上它会抛
+- 路径：`/dsh-notify-lite`（前缀）。官方 `connection.rpc.handle` 可用时由它注册并认证；0.2.1-rc.2 上它会抛
   `cannot get property "webServer" without inject`，此时插件用 `webServer.register` 注册同一路径，并在 handler 最前面调用
   `connection.requestRejection(req)`（官方 Host/Origin + 签名 cookie 栅栏）——即同源校验仍由官方 Connection 层完成。
 - 请求/响应信封（与官方一元 RPC 一致）：
@@ -147,7 +147,7 @@ export function apply(ctx, config) { ... }  // 注册事件/路由/清理；无�
 
 ## 3. Client 半（lib/client.js）
 
-- 单文件、CJS 包装、无 `import`/`require` 除 `require('react')`；`window.__ModuleLoader__.load({ id:'dsh-notify-toast', factory(require){ ... return {inject, apply} } })`。
+- 单文件、CJS 包装、无 `import`/`require` 除 `require('react')`；`window.__ModuleLoader__.load({ id:'dsh-notify-lite', factory(require){ ... return {inject, apply} } })`。
 - `inject: ['slots','locale','connection']`；`uiWorkspace` 用 `ctx.get('uiWorkspace')` 可选。
 - `apply(ctx)`：
   1. `ctx.effect(() => ctx.locale.register(LOCALE_NS, {zh, en}))`；`const t = ctx.locale.bind(LOCALE_NS)`。
@@ -157,9 +157,9 @@ export function apply(ctx, config) { ... }  // 注册事件/路由/清理；无�
   5. 展示：本地化标题（question/approval/complete/test 4 条）+ 正文；`titleOnly` → body=''；正文截断到 `bodyLength` 码点，超长加 '…'；approval 正文 = `toolName + ' · ' + purpose`；complete 无 text → `t('fallbackBody')`。
   6. 通知：`Notification.permission` 检查；`new Notification(...)` 兜异常；`silent:true`；不向平台传 `tag`（自管 map 关闭上一条）；不主动自动关闭（Windows 横幅自动收起，条目留在通知中心供稍后点击）；`onclick` → `call('focus',{sessionId})`（不 await 失败）→ `window.focus()` → `uiWorkspace.openSession(sessionId)`（有 sessionId 时）→ `close()`。
   7. 声音：4 个 Web Audio 合成预设（ding / chime / bell / soft）+ 内嵌的 uisfx CC0「弹一下」+ none 关闭；`volume` 映射 master gain；AudioContext 懒建、播放前 `resume()`、首次 `pointerdown`/`keydown` 解锁；资源解码失败回退合成音；`ctx.effect` 卸载时 `close()`；任何异常静默。
-  8. 设置页：`settings.section` 注册（id=`dsh-notify-toast`, order=42, label thunk）；组件用 React hooks + 纯 HTML（`role="switch"` 自绘开关、`input[type=range]`、`select`、`button`），主题 token 用 `var(--dsw-alias-*, fallback)`；改动 250ms 防抖 `call('save',{patch})`；显示保存状态、通知权限、Host 连接、nativeFocus、settingsAvailable 状态；「发送测试通知」按钮 → `call('test')`（Host 无响应时本地直接展示并标注）。
+  8. 设置页：`settings.section` 注册（id=`dsh-notify-lite`, order=42, label thunk）；组件用 React hooks + 纯 HTML（`role="switch"` 自绘开关、`input[type=range]`、`select`、`button`），主题 token 用 `var(--dsw-alias-*, fallback)`；改动 250ms 防抖 `call('save',{patch})`；显示保存状态、通知权限、Host 连接、nativeFocus、settingsAvailable 状态；「发送测试通知」按钮 → `call('test')`（Host 无响应时本地直接展示并标注）。
   9. 权限：页面首次 `pointerdown`/`keydown` 且 `Notification.permission==='default'` 时 `Notification.requestPermission()`（一次）；测试按钮点击也可触发。
-  10. 多窗口：用 `localStorage` 租约（`dsh-notify-toast:leader`，心跳 5s，15s 过期）+ `storage` 事件竞争，仅 leader 弹 toast/出声（settings 页仍各自可开）。
+  10. 多窗口：用 `localStorage` 租约（`dsh-notify-lite:leader`，心跳 5s，15s 过期）+ `storage` 事件竞争，仅 leader 弹 toast/出声（settings 页仍各自可开）。
   11. 任务栏角标：仅 leader 在未聚焦的 `complete` 事件上维护本窗口的未读根会话 `Set`；`taskbarBadgeEnabled` 为真时按不同 `sessionId`（合并事件用 `sessionIds`）计数，`call('taskbar-badge',{count})`；1–3 深灰底白字蓝环数字、>3 红点；窗口聚焦/点击任务栏、关闭设置或卸载时 `call('taskbar-badge',{count:0})`。Host helper 一次性调用 `ITaskbarList3::SetOverlayIcon`，不常驻。
 - 卸载清理：所有 `ctx.effect` 返回 disposer；长轮询 Abort、AudioContext close、监听移除、任务栏角标清零。
 

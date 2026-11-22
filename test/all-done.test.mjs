@@ -1,5 +1,5 @@
 /**
- * dsh-notify-toast — all-done title marker tests.
+ * dsh-notify-lite — all-done title marker tests.
  *
  * Runs the pure tracker without Cordis or a real session.
  */

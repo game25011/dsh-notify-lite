@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * dsh-notify-toast — Host RPC probe (developer tool, not shipped behaviour).
+ * dsh-notify-lite — Host RPC probe (developer tool, not shipped behaviour).
  *
  * The plugin does NOT open its own HTTP port: it registers the generic
- * Connection RPC channel `/dsh-notify-toast` on the official Host web server.
+ * Connection RPC channel `/dsh-notify-lite` on the official Host web server.
  * That channel sits behind Connection's Host/Origin fence AND the signed
  * browser cookie (`Connection.admit`), so an ordinary command-line request
  * without the page's cookie is expected to be rejected with 401/403.
@@ -41,7 +41,7 @@ import {
 } from '../lib/config.js'
 import { cleanMarkdownText, truncateCodepoints } from '../lib/text.js'
 
-const HELP = `dsh-notify-toast RPC probe (v${VERSION})
+const HELP = `dsh-notify-lite RPC probe (v${VERSION})
 
 The Host registers the official Connection RPC channel ${RPC_CHANNEL}.
 Endpoints (POST JSON, envelope {type:'client-request', rpcId, method, payload}):
@@ -208,7 +208,7 @@ async function runProbe(options) {
   }
   if (response.status === 404 || response.status === 405) {
     console.error(`[probe] the RPC channel is not mounted on this Host (HTTP ${response.status}).`)
-    console.error('[probe] install/enable dsh-notify-toast in the desktop profile, restart DSH, then retry.')
+    console.error('[probe] install/enable dsh-notify-lite in the desktop profile, restart DSH, then retry.')
     return 3
   }
   if (!response.ok) {

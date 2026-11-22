@@ -110,7 +110,7 @@ const settings = {
   },
   describe() {
     return [{
-      ns: 'dsh-notify-toast',
+      ns: 'dsh-notify-lite',
       value: { enabled: true, bodyLength: 40, mergeIntervalMs: 2500 },
     }]
   },
@@ -138,7 +138,7 @@ console.log('after apply:', JSON.stringify({ routes: calls.registeredRoutes.leng
 assert.equal(calls.registeredRoutes.length, 1, 'exactly one browser route is registered')
 const route = calls.registeredRoutes[0]
 assert.equal(route.kind, 'prefix')
-assert.equal(route.path, '/dsh-notify-toast')
+assert.equal(route.path, '/dsh-notify-lite')
 assert.equal(calls.configures, 1, 'automatic settings form is disabled')
 
 const approvalRegistration = calls.eventListeners.find((entry) => entry.eventName === 'approval/request')
@@ -168,7 +168,7 @@ await questionRegistration.listener({ agent: { id: 'session-question' }, questio
 assert.equal(questionDelegated, true, 'question observer always delegates')
 console.log('question observer: prepend/global + delegate ✓')
 
-function request(body, { method = 'POST', url = '/dsh-notify-toast/health', headers = {} } = {}) {
+function request(body, { method = 'POST', url = '/dsh-notify-lite/health', headers = {} } = {}) {
   const req = Readable.from([Buffer.from(typeof body === 'string' ? body : JSON.stringify(body))])
   req.method = method
   req.url = url
@@ -209,7 +209,7 @@ function envelope(method, payload = {}) {
 
 async function call(method, payload = {}, options = {}) {
   const res = response()
-  const url = options.url ?? `/dsh-notify-toast/${method}`
+  const url = options.url ?? `/dsh-notify-lite/${method}`
   await route.handler(request(envelope(method, payload), { ...options, url }), res)
   assert.equal(res.state.status, 200, `${method}: HTTP 200`)
   const parsed = JSON.parse(res.state.body)
@@ -236,7 +236,7 @@ console.log('config: transport=route, settingsAvailable=true, config exposed ✓
 
 const saveResult = await call('save', { patch: { bodyLength: 55, sound: 'bell' } })
 assert.equal(saveResult.ok, true)
-assert.deepEqual(calls.updates.at(-1), { ns: 'dsh-notify-toast', patch: { bodyLength: 55, sound: 'bell' } })
+assert.deepEqual(calls.updates.at(-1), { ns: 'dsh-notify-lite', patch: { bodyLength: 55, sound: 'bell' } })
 console.log('save: settings.update called with the validated patch ✓')
 
 const invalidSave = await call('save', { patch: { bodyLength: 999 } })

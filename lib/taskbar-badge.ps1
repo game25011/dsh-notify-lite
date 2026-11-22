@@ -14,7 +14,7 @@ try {
     $sha.Dispose()
 }
 $hash = -join ($hashBytes | ForEach-Object { $_.ToString('x2') })
-$cacheRoot = Join-Path $env:LOCALAPPDATA 'dsh-notify-toast\native-cache'
+$cacheRoot = Join-Path $env:LOCALAPPDATA 'dsh-notify-lite\native-cache'
 $dll = Join-Path $cacheRoot ($hash + '.badge.dll')
 
 function New-BadgeDll {

@@ -1,4 +1,4 @@
-# dsh-notify-toast — 实现方案（历史，0.1 时代）
+# dsh-notify-lite — 实现方案（历史，0.1 时代）
 
 > **历史文档**：这份开工方案保留作记录，不再维护，也不会进入 npm 包。当前实现、配置和限制以 `README.md` 与 `docs/INTERFACE.md` 为准。
 > 文中「非目标」「提示音 3 种」「0.1.0」等表述已被 0.3.0 实现取代；不要据此判断当前行为。
@@ -28,8 +28,8 @@
 
 ### 2.2 客户端（静态 Web 插件）
 
-- 格式：`window.__ModuleLoader__.load({ id:'dsh-notify-toast', factory(require){ const React=require('react'); return {inject:[...], apply(ctx){...}} } })`；`dsh.client = { platform:'web', immediately:true, inject:[...] }`（必须在页面启动时立即挂载，后台监听才能工作）。
-- 设置页：`ctx.slots.inject('settings.section', () => ctx.slots.register({ name:'settings.section', id:'dsh-notify-toast', order:42, label:()=>t('nav'), locale:NS, inject:()=>({t}) }, Component))`。
+- 格式：`window.__ModuleLoader__.load({ id:'dsh-notify-lite', factory(require){ const React=require('react'); return {inject:[...], apply(ctx){...}} } })`；`dsh.client = { platform:'web', immediately:true, inject:[...] }`（必须在页面启动时立即挂载，后台监听才能工作）。
+- 设置页：`ctx.slots.inject('settings.section', () => ctx.slots.register({ name:'settings.section', id:'dsh-notify-lite', order:42, label:()=>t('nav'), locale:NS, inject:()=>({t}) }, Component))`。
 - Client 服务：`slots`、`locale`（`register/bind/getLocale/subscribe`）、`uiWorkspace.openSession(sessionId)`。
 - Toast：`new Notification(title,{body,silent:true})`（Electron 下即 Windows 原生 toast）；`Notification.permission` 做降级；`onclick` → 先 `POST /focus`（Host 置前）再 `window.focus()` 并 `openSession`。
 - 焦点：`document.hasFocus()` + `visibilityState` + `window` focus/blur + `visibilitychange`。
@@ -40,7 +40,7 @@
 
 - 开发期：`plugin_manager action=install_bundle target=<绝对目录>`（本地目录为 link）。
 - 交付：`npm pack` 生成 tgz，用 `plugin_manager install_bundle target=<tgz 绝对路径>` 或 `dsh plugin --profile desktop add <tgz>` 安装/升级；`remove_bundle` 卸载。
-- 不手改 profile 的 `package.json` / `cordis.patch.yml`；插件自己的 `cordis.patch.yml` 只 insert 一行 `id: dsh-notify-toast`。
+- 不手改 profile 的 `package.json` / `cordis.patch.yml`；插件自己的 `cordis.patch.yml` 只 insert 一行 `id: dsh-notify-lite`。
 
 ## 3. 架构（Host 检测 + Client 展示，长轮询传输）
 
@@ -50,7 +50,7 @@ approval/request ─┐                          ┌─ settings.section 设置�
 user-questions/request ─┼─ 清洗/截断/合并 ─→ 事件环形队列 ←─ RPC poll(after, wait=25s)（聚焦/未聚焦由 Client 判断）
 session/event(turn/end, root) ─┘             ├─ new Notification({silent:true})
 ctx.settings (volatile Config) ←─ RPC save    └─ Web Audio 提示音
-浏览器路由 /dsh-notify-toast：config / save / poll / health / test / focus
+浏览器路由 /dsh-notify-lite：config / save / poll / health / test / focus
 同源栅栏：connection.requestRejection（官方 Host/Origin + 签名 cookie）
 koffi user32 window focus ← RPC focus
 ```
@@ -103,6 +103,6 @@ koffi user32 window focus ← RPC focus
 ## 7. 交付物
 
 - 源码：`<插件源码目录>`
-- 安装包：`dsh-notify-toast-0.1.0.tgz`（`npm pack`）
+- 安装包：`dsh-notify-lite-0.1.0.tgz`（`npm pack`）
 - 文档：`README.md`（功能/配置/兼容/已知限制）、`CHANGELOG.md`、本方案、`docs/TEST-REPORT.md`
 - 安装/升级/卸载命令与验收记录。

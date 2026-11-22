@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * dsh-notify-toast — settings-nav icon tests.
+ * dsh-notify-lite — settings-nav icon tests.
  *
  * The settings shell projects no icon field for a `settings.section`, so the
  * client claims its own nav row and swaps the fallback gear for a mask-drawn
@@ -198,7 +198,7 @@ test('install claims only its own row and follows a label change', async () => {
 
   assert.equal(fake.state.styleTags.length, 1, 'one stylesheet is injected')
   assert.match(fake.state.styleTags[0].textContent, /mask-image/)
-  assert.equal(fake.state.styleTags[0].dataset.pluginCss, 'dsh-notify-toast/settings-nav-icon')
+  assert.equal(fake.state.styleTags[0].dataset.pluginCss, 'dsh-notify-lite/settings-nav-icon')
   assert.equal(ownRow.hasAttribute(api.NAV_ICON_MARKER), true)
   assert.equal(marketRow.hasAttribute(api.NAV_ICON_MARKER), false)
   assert.equal(observers.length, 1, 'one observer watches the dialog')

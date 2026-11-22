@@ -1,5 +1,5 @@
 /**
- * dsh-notify-toast — Host browser-transport tests.
+ * dsh-notify-lite — Host browser-transport tests.
  *
  * Drives the webServer-route fallback used when the official
  * `connection.rpc.handle` throws inside DSH 0.2.1-rc.2, with fake Node
@@ -18,7 +18,7 @@ const {
 } = __test
 
 /** Build a fake IncomingMessage with a JSON body. */
-function fakeRequest({ method = 'POST', url = '/dsh-notify-toast/health', body, headers = {}, aborted = false } = {}) {
+function fakeRequest({ method = 'POST', url = '/dsh-notify-lite/health', body, headers = {}, aborted = false } = {}) {
   const chunks = body === undefined ? [] : [Buffer.from(typeof body === 'string' ? body : JSON.stringify(body))]
   const req = Readable.from(chunks)
   req.method = method
@@ -62,12 +62,12 @@ function envelope(overrides = {}) {
 }
 
 test('endpointFromPathname accepts the exact channel prefix only', () => {
-  assert.equal(endpointFromPathname('/dsh-notify-toast/health'), 'health')
-  assert.equal(endpointFromPathname('/dsh-notify-toast/poll'), 'poll')
-  assert.equal(endpointFromPathname('/dsh-notify-toast'), undefined)
-  assert.equal(endpointFromPathname('/dsh-notify-toast/'), undefined)
-  assert.equal(endpointFromPathname('/dsh-notify-toast/a/b'), undefined)
-  assert.equal(endpointFromPathname('/dsh-notify-toast/../secret'), undefined)
+  assert.equal(endpointFromPathname('/dsh-notify-lite/health'), 'health')
+  assert.equal(endpointFromPathname('/dsh-notify-lite/poll'), 'poll')
+  assert.equal(endpointFromPathname('/dsh-notify-lite'), undefined)
+  assert.equal(endpointFromPathname('/dsh-notify-lite/'), undefined)
+  assert.equal(endpointFromPathname('/dsh-notify-lite/a/b'), undefined)
+  assert.equal(endpointFromPathname('/dsh-notify-lite/../secret'), undefined)
   assert.equal(endpointFromPathname('/other/health'), undefined)
 })
 
@@ -94,7 +94,7 @@ test('non-POST requests are rejected with 405 and an allow header', async () => 
 
 test('unknown paths under the prefix return 404', async () => {
   const res = fakeResponse()
-  await handleRpcRoute(fakeRequest({ url: '/dsh-notify-toast/a/b', body: envelope() }), res, fakeState(), allowAll)
+  await handleRpcRoute(fakeRequest({ url: '/dsh-notify-lite/a/b', body: envelope() }), res, fakeState(), allowAll)
   assert.equal(res.statusCode, 404)
 })
 
@@ -123,7 +123,7 @@ test('a valid request is answered with the official server-response envelope', a
 test('an endpoint/method mismatch is a gateway/bad-request business failure', async () => {
   const res = fakeResponse()
   await handleRpcRoute(
-    fakeRequest({ url: '/dsh-notify-toast/health', body: envelope({ method: 'config' }) }),
+    fakeRequest({ url: '/dsh-notify-lite/health', body: envelope({ method: 'config' }) }),
     res,
     fakeState(),
     allowAll,
@@ -156,7 +156,7 @@ test('a client disconnect aborts the long-poll signal', async () => {
     }
     signal.addEventListener('abort', () => resolve({ ok: true, value: { events: [], next: 0 } }), { once: true })
   }))
-  const req = fakeRequest({ url: '/dsh-notify-toast/poll', body: envelope({ method: 'poll', payload: { after: 0, wait: 25000 } }) })
+  const req = fakeRequest({ url: '/dsh-notify-lite/poll', body: envelope({ method: 'poll', payload: { after: 0, wait: 25000 } }) })
   const pending = handleRpcRoute(req, res, state, allowAll)
   await new Promise((resolve) => setImmediate(resolve))
   assert.ok(observed, 'handler received the abort signal')

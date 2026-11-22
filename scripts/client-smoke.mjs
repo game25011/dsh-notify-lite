@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * dsh-notify-toast — client bundle smoke test.
+ * dsh-notify-lite — client bundle smoke test.
  *
  * Loads lib/client.js inside a Node `vm` sandbox that only provides browser
  * globals (window/__ModuleLoader__, document, Notification, localStorage,
@@ -31,10 +31,10 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const CLIENT_PATH = path.join(ROOT, 'lib', 'client.js')
 const SOURCE = fs.readFileSync(CLIENT_PATH, 'utf8')
 
-const PKG_ID = 'dsh-notify-toast'
-const NS = 'dsh-notify-toast'
-const RPC_CHANNEL = '/dsh-notify-toast'
-const LEADER_KEY = 'dsh-notify-toast:leader'
+const PKG_ID = 'dsh-notify-lite'
+const NS = 'dsh-notify-lite'
+const RPC_CHANNEL = '/dsh-notify-lite'
+const LEADER_KEY = 'dsh-notify-lite:leader'
 
 const unhandledRejections = []
 process.on('unhandledRejection', (reason) => {
@@ -430,7 +430,7 @@ function createFakeContext(env, options = {}) {
     if (endpoint === 'config') {
       return Promise.resolve({
         ok: true,
-        value: { ok: true, version: '0.5.3', ns: NS, config: Object.assign({}, api.hostConfig), status: statusValue() },
+        value: { ok: true, version: '0.6.0', ns: NS, config: Object.assign({}, api.hostConfig), status: statusValue() },
       })
     }
     if (endpoint === 'save') {
@@ -937,7 +937,7 @@ async function main() {
       '在线页面',
       '已允许',
       '已连接',
-      '0.5.3',
+      '0.6.0',
     ]) {
       assert.ok(text.includes(fragment), 'settings page missing copy: ' + fragment)
     }
@@ -962,18 +962,18 @@ async function main() {
     )
     const advancedToggle = findElement(
       tree,
-      (node) => node.type === 'button' && node.props['aria-controls'] === 'dsh-notify-toast-advanced-body',
+      (node) => node.type === 'button' && node.props['aria-controls'] === 'dsh-notify-lite-advanced-body',
     )
     const diagnosticsToggle = findElement(
       tree,
-      (node) => node.type === 'button' && node.props['aria-controls'] === 'dsh-notify-toast-diagnostics-body',
+      (node) => node.type === 'button' && node.props['aria-controls'] === 'dsh-notify-lite-diagnostics-body',
     )
     assert.ok(advancedToggle, 'advanced disclosure toggle exists')
     assert.ok(diagnosticsToggle, 'diagnostics disclosure toggle exists')
     assert.equal(diagnosticsToggle.props['aria-expanded'], 'false', 'diagnostics is collapsed by default')
     const advancedBody = findElement(
       tree,
-      (node) => node.type === 'div' && node.props.id === 'dsh-notify-toast-advanced-body',
+      (node) => node.type === 'div' && node.props.id === 'dsh-notify-lite-advanced-body',
     )
     assert.ok(advancedBody, 'advanced disclosure body exists')
     assert.equal(advancedBody.props['aria-hidden'], 'true', 'advanced content is hidden by default')
@@ -1295,7 +1295,7 @@ async function main() {
     const findInput = () => {
       reactStub.hooks.index = 0
       const tree = titled.api.registrations[0].component({})
-      return findElement(tree, (node) => node.type === 'input' && node.props.id === 'dsh-notify-toast-text-all-done-title')
+      return findElement(tree, (node) => node.type === 'input' && node.props.id === 'dsh-notify-lite-text-all-done-title')
     }
     reactStub.hooks.reset()
     const input = findInput()

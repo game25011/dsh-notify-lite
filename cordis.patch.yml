@@ -1,5 +1,5 @@
 # dsh bundle patch: insert this plugin's Host row into the profile layer stack.
 # Installed and managed by the official plugin manager; do not edit the profile by hand.
 - insert:
-    - id: dsh-notify-toast
-      name: 'dsh-notify-toast'
+    - id: dsh-notify-lite
+      name: 'dsh-notify-lite'

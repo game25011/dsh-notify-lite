@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0 — 未发布
+
+- 全面更名：插件清单 id `dsh.notify-lite`、Host 行 id、RPC 前缀 `/dsh-notify-lite`、settings 命名空间、原生 helper 缓存目录（`%LOCALAPPDATA%\dsh-notify-lite\native-cache`）与 npm 包名统一为 `dsh-notify-lite`。
+- npm 包名从 `@game25011/dsh-notify-toast` 改为未占用的 `dsh-notify-lite`：源码包名与发布名一致，发布不再需要临时改名。
+- 升级须知：插件 id 变更，需先移除旧 bundle 再安装 0.6.0；旧 settings 不迁移。
+- 待办：DSH 侧 `@deepseek-ai/schemastery` 3.18.2 无 `.volatile()`，`buildConfigSchema` 当前解析不出 Config（host probe 报 `Config: unresolved`），需适配后再发布。
+
 ## 0.5.3 — 2026-11-17
 
 - 任务栏角标：数字字形的目标高度比例从 0.58 收到 0.46，恢复 0.5.1 的数字宽度，并保留约 10% 的视觉分量；1–3 数字、>3 红点、计数与清除逻辑不变。

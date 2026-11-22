@@ -31,11 +31,11 @@ import {
 } from '../lib/config.js'
 
 test('constants match docs/INTERFACE.md §0', () => {
-  assert.equal(PKG_ID, 'dsh-notify-toast')
-  assert.equal(VERSION, '0.5.3')
-  assert.equal(RPC_CHANNEL, '/dsh-notify-toast')
-  assert.equal(SETTINGS_NS, 'dsh-notify-toast')
-  assert.equal(LOCALE_NS, 'dsh-notify-toast')
+  assert.equal(PKG_ID, 'dsh-notify-lite')
+  assert.equal(VERSION, '0.6.0')
+  assert.equal(RPC_CHANNEL, '/dsh-notify-lite')
+  assert.equal(SETTINGS_NS, 'dsh-notify-lite')
+  assert.equal(LOCALE_NS, 'dsh-notify-lite')
 })
 
 test('DEFAULTS match docs/INTERFACE.md §2.4', () => {

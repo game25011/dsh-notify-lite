@@ -1,4 +1,4 @@
-# dsh-notify-toast 0.1.0 — 测试与验收报告（历史）
+# dsh-notify-lite 0.1.0 — 测试与验收报告（历史）
 
 > 0.3.0 注：本文件是 0.1.0 的历史报告，不应作为当前验收结论。0.3.0 当前自动测试为 `npm test` 94/94、client smoke 25/25（goal 汇总与原生生命周期），并已完成原生进度 toast、点击回调和真实 DSH 点击回会话验证；详见 README、CHANGELOG 与 0.3.0 维护记录。
 
@@ -14,7 +14,7 @@
 | Client 加载/行为 | `npm run smoke`（23 项，Node `vm` 模拟 `__ModuleLoader__`/Notification/AudioContext） | factory/apply、双语字典、toast/声音/点击/焦点/设置保存/降级/清理 | 真实浏览器里 React 渲染外观 |
 | Host 集成 | `npm run probe`（假 Cordis ctx + 真实 profile cwd） | schemastery 解析、回退路由注册、官方 RPC 信封、settings 读写、环形缓冲、清理 | 真实 host 进程内的完整事件流 |
 | 插件安装/激活 | 官方 `plugin_manager` + Host `Config.listConfigs` | bundle 安装、Host 行激活、Config schema 注册 | toast 是否真的弹出 |
-| 浏览器路由 | `curl http://127.0.0.1:<port>/dsh-notify-toast/health` | 路由已挂载、`connection.requestRejection` 栅栏生效（401） | 带签名的页面请求是否成功 |
+| 浏览器路由 | `curl http://127.0.0.1:<port>/dsh-notify-lite/health` | 路由已挂载、`connection.requestRejection` 栅栏生效（401） | 带签名的页面请求是否成功 |
 | 设置页注册 | Client Inspect `Slots.listSubTree settings.section` | 客户端 bundle 已加载、设置页 occupant 出现（id/order 正确） | 页面外观/交互手感 |
 | 端到端通知 | 用户前台试用（聚焦/失焦/提问/审批/完成/点击/声音） | 真实 Windows toast、声音、点击回窗 | 本机无 GUI 眼动/通知中心读取能力 |
 
@@ -43,7 +43,7 @@ npm run smoke
 ```
 
 覆盖：factory/inject/apply；zh+en 字典一致；正文长度/隐私/审批/完成回退；焦点计算；
-`settings.section` 注册（id `dsh-notify-toast`、order 42、label、locale、inject）；config/poll 载荷
+`settings.section` 注册（id `dsh-notify-lite`、order 42、label、locale、inject）；config/poll 载荷
 `{after:0,wait:25000}`；首次手势请求通知权限 + 解锁音频（仅一次）；未聚焦时 `silent:true` toast + 风铃振荡器；
 审批正文「工具名 · 目的」+ 点击后 focus RPC/window.focus/openSession；聚焦时完全跳过；开关与防抖保存；
 Host 业务拒绝显示保存失败；dispose（abort、关闭 AudioContext、释放 leader 租约、移除监听、无未处理 rejection）；
@@ -55,11 +55,11 @@ Host 业务拒绝显示保存失败；dispose（abort、关闭 AudioContext、�
 |---|---|
 | 安装方式 | `plugin_manager install_bundle` → `target: <插件目录绝对路径>` |
 | 安装结果 | `application: applied`，`enabled: true`，`warnings: []` |
-| profile 记录 | `desktop/package.json`：`"dsh-notify-toast": "link:<plugin-dir>"`，bundles 末尾含 `dsh-notify-toast` |
-| 实体 | `profiles/desktop/node_modules/dsh-notify-toast` 为 link；改代码 + 插件开关触发的 recomposition 即可生效 |
-| Host 行 | `plugin_manager list_plugins`：`include:dsh-notify-toast`，`fiberPhase: active`，`enabled: true` |
-| Config schema | `cordis_inspect_query Config.listConfigs name=dsh-notify-toast` → `status: "schema"`（schemastery 解析成功，settings 可持久化） |
-| 设置页 | Client Inspect `settings.section` occupants 含 `{id:"dsh-notify-toast", order:42, active:true}`（客户端 bundle 已加载） |
+| profile 记录 | `desktop/package.json`：`"dsh-notify-lite": "link:<plugin-dir>"`，bundles 末尾含 `dsh-notify-lite` |
+| 实体 | `profiles/desktop/node_modules/dsh-notify-lite` 为 link；改代码 + 插件开关触发的 recomposition 即可生效 |
+| Host 行 | `plugin_manager list_plugins`：`include:dsh-notify-lite`，`fiberPhase: active`，`enabled: true` |
+| Config schema | `cordis_inspect_query Config.listConfigs name=dsh-notify-lite` → `status: "schema"`（schemastery 解析成功，settings 可持久化） |
+| 设置页 | Client Inspect `settings.section` occupants 含 `{id:"dsh-notify-lite", order:42, active:true}`（客户端 bundle 已加载） |
 | Host 代码生效 | 通过官方插件开关触发的 profile recomposition 载入最终 Host 代码（无需整机重启）；路由探针由修复前的 `405` 变为 `401`（已挂载 + 栅栏生效） |
 
 ## 4. 运行时证据
@@ -70,15 +70,15 @@ Host 路由探针（不带浏览器 cookie，验证「路由已注册 + 认证�
 
 | 请求 | 结果 | 解读 |
 |---|---|---|
-| `POST /dsh-notify-toast/health`（无 Origin） | **401** | 路由存在，`requestRejection` 认证栅栏生效 |
-| `GET /dsh-notify-toast/health` | **401** | 同上（栅栏先于方法检查） |
+| `POST /dsh-notify-lite/health`（无 Origin） | **401** | 路由存在，`requestRejection` 认证栅栏生效 |
+| `GET /dsh-notify-lite/health` | **401** | 同上（栅栏先于方法检查） |
 | `POST /random-xyz/health`（对照） | **405** | 未注册路由；说明 401 并非全局默认 |
 
 - **Host 集成探针**（`npm run probe`，真实 profile cwd）：
   - `Config: resolved | source: cwd`（Host 进程 cwd = profile 目录，修复了 `DSH_PROFILE_DIR` 缺失时的 schema 解析）；
-  - 回退路由 `prefix /dsh-notify-toast` 注册 1 条；`requestRejection` 拒绝 → 403；
+  - 回退路由 `prefix /dsh-notify-lite` 注册 1 条；`requestRejection` 拒绝 → 403；
   - `config`：`transport: "route"`、`settingsAvailable: true`、默认配置完整；
-  - `save`：`settings.update("dsh-notify-toast", {bodyLength:55,sound:"bell"})` 被调用；越界值被业务拒绝且不写 settings；
+  - `save`：`settings.update("dsh-notify-lite", {bodyLength:55,sound:"bell"})` 被调用；越界值被业务拒绝且不写 settings；
   - `test` + `poll`：事件入环形缓冲、`after` 游标返回、`next` 递增；
   - `focus`：返回 `{ok:true,native:true}` 且不抛错；
   - 卸载清理：3 个 effect disposer 全部执行。

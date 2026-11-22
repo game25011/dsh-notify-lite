@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 $source = Join-Path $PSScriptRoot 'native-toast-helper.cs'
 if (-not (Test-Path $source)) { throw "helper source missing: $source" }
 $hash = (Get-FileHash -Algorithm SHA256 -Path $source).Hash.ToLowerInvariant()
-$cacheRoot = Join-Path $env:LOCALAPPDATA 'dsh-notify-toast\native-cache'
+$cacheRoot = Join-Path $env:LOCALAPPDATA 'dsh-notify-lite\native-cache'
 $dll = Join-Path $cacheRoot ($hash + '.dll')
 
 function New-HelperDll {
